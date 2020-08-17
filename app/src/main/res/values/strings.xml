@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">Portfolio App</string>
+
+    <!-- Basis -->
+    <string name="overslaan">Overslaan</string>
+    <string name="volgende">Volgende</string>
+    <string name="afronden">Afronden</string>
+    <string name="opslaan">Opslaan</string>
+    <string name="bijwerken">Bijwerken</string>
+    <string name="doorgaan">Doorgaan</string>
+    <string name="aanpassen">Aanpassen</string>
+    <string name="verwijderen">Verwijderen</string>
+
+    <!-- Gebruiker -->
+    <string name="voornaam">Voornaam</string>
+    <string name="achternaam">Achternaam</string>
+    <string name="projecten">Projecten</string>
+    <string name="select_photo">Foto selecteren</string>
+    <string name="change_photo">Foto wijzigen</string>
+    <string name="change_account">Account wijzigen</string>
+    <string name="user_info">Gebruikers Info</string>
+    <string name="change_info">Informatie wijzigen</string>
+
+    <!-- Account aanmaken -->
+    <string name="wachtwoord">Wachtwoord</string>
+    <string name="repeat_wachtwoord">Herhaal wachtwoord</string>
+    <string name="email">E-mail</string>
+    <string name="registreren">Registreren</string>
+    <string name="log_in">Log in!</string>
+    <string name="al_account_hebben">Heb je al een account?</string>
+
+    <!-- Nieuw project toevoegen -->
+    <string name="new_project">Nieuw project</string>
+    <string name="save_project">Project opslaan</string>
+    <string name="project_name">Project naam</string>
+    <string name="beschrijving">Beschrijving</string>
+    <string name="website">Website</string>
+    <string name="opdrachtgever">Opdrachtgever</string>
+    <string name="datum">Datum oplevering</string>
+    <string name="kies_datum">Kies Datum</string>
+    <string name="aantal_uur">Aantal uur aan gewerkt</string>
+
+    <!-- Inlog page -->
+    <string name="inloggen">Inloggen</string>
+
+    <!-- Onboarding -->
+    <string name="title1">Creëer</string>
+    <string name="text_slide1">Ben je al IAT\'er nu erg trots op een bepaald project? Laat dit mooie project dan niet stoffig worden.</string>
+
+    <string name="title2">Sla op</string>
+    <string name="text_slide2">Wij bieden je de mogelijkheid om deze fantastische applicaties op te slaan.</string>
+
+    <string name="title3">Geniet</string>
+    <string name="text_slide3">Door al je projecten op 1 plek samen te voegen, krijg je een handig portfolio die je overal kan laten zien, gewoon in je broekzak!</string>
+
+    <string name="onboard_image_desc">Plaatje ter illustratie</string>
+
+    <!-- Alerts -->
+    <string name="login_success">Inloggen Geslaagd</string>
+    <string name="password_required">Wachtwoord is vereist</string>
+    <string name="email_required">E-mail is vereist</string>
+    <string name="profile_updated">Profiel Bijgewerkt</string>
+
+    <!-- Placeholders -->
+    <string name="txt_placeholder">Hier komt tekst</string>
+    <string name="desc_arrow_back">Terug knop</string>
+</resources>
