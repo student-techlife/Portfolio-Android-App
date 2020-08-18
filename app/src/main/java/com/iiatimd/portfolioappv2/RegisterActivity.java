@@ -3,6 +3,7 @@ package com.iiatimd.portfolioappv2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,14 +65,25 @@ public class RegisterActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmailSignUp);
         btnSignUp = findViewById(R.id.btnSignUp);
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.w(TAG, "test");
-                if (validate()) {
-                    register();
-                }
+//        btnSignUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.w(TAG, "test");
+//                if (validate()) {
+//                    register();
+//                }
+//            }
+//        });
+
+        btnSignUp.setOnClickListener(v->{
+            Log.w(TAG, "test");
+            if (validate()) {
+                register();
             }
+        });
+
+        txtSignIn.setOnClickListener(v->{
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
 
         txtEmail.addTextChangedListener(new TextWatcher() {
