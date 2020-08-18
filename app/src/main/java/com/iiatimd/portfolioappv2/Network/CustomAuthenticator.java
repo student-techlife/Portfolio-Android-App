@@ -34,7 +34,7 @@ public class CustomAuthenticator implements Authenticator {
     @Override
     public Request authenticate(Route route, Response response) throws IOException {
 
-        if (responseCount(response) >= 2) {
+        if (responseCount(response) >= 3) {
             return null;
         }
 
@@ -42,7 +42,6 @@ public class CustomAuthenticator implements Authenticator {
 
         ApiService service = RetrofitBuilder.createService(ApiService.class);
         Call<AccessToken> call = service.refresh(token.getRefreshToken() + "a");
-
         retrofit2.Response<AccessToken> res = call.execute();
 
         if (res.isSuccessful()) {

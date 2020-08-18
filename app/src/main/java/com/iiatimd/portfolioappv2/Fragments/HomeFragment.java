@@ -67,15 +67,15 @@ public class HomeFragment extends Fragment {
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-        ((HomeActivity)getActivity()).getProjects();
+//        ((HomeActivity)getActivity()).getProjects();
 
         // Swipe down voor een refresh
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                ((HomeActivity)getActivity()).getProjects();
-            }
-        });
+//        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                ((HomeActivity)getActivity()).getProjects();
+//            }
+//        });
     }
 
 //    private void getPosts() {
