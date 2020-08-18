@@ -65,23 +65,15 @@ public class RegisterActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmailSignUp);
         btnSignUp = findViewById(R.id.btnSignUp);
 
-//        btnSignUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.w(TAG, "test");
-//                if (validate()) {
-//                    register();
-//                }
-//            }
-//        });
-
+        // Valideer input en start register functie
         btnSignUp.setOnClickListener(v->{
-            Log.w(TAG, "test");
+//            Log.w(TAG, "test");
             if (validate()) {
                 register();
             }
         });
 
+        // ga naar login scherm
         txtSignIn.setOnClickListener(v->{
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
@@ -159,7 +151,11 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.w(TAG, "onResponse: " + response );
                 if(response.isSuccessful()) {
                     Log.w(TAG, "onResponse: " + response.body() );
+                    // Sla tokens op
                     tokenManager.saveToken(response.body());
+                    // Ga door naar Home scherm
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    finish();
                 } else {
                     handleErrors(response.errorBody());
                 }
