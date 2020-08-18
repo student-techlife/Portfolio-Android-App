@@ -64,4 +64,8 @@
     <!-- Placeholders -->
     <string name="txt_placeholder">Hier komt tekst</string>
     <string name="desc_arrow_back">Terug knop</string>
+
+    <!-- Errors -->
+    <string name="err_email">The email must be a valid email address</string>
+    <string name="err_password">The password must be at least 6 characters</string>
 </resources>
