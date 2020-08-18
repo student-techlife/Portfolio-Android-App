@@ -79,14 +79,14 @@ public class AccountFragment extends Fragment {
 
         if (item.getItemId() == R.id.item_logout) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Do you want to logout?");
-            builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+            builder.setMessage(R.string.warn_logout);
+            builder.setPositiveButton(R.string.btn_logout, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-//                    logout();
+                    ((HomeActivity)getActivity()).logout();
                 }
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 

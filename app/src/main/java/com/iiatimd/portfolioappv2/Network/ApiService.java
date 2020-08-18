@@ -22,6 +22,9 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> refresh(@Field("refresh_token") String refreshToken);
 
+    @POST("logout")
+    Call<AccessToken> logout();
+
     @GET("projects")
     Call<ProjectResponse> projects();
 
