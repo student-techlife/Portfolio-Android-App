@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
 import com.iiatimd.portfolioappv2.Fragments.AccountFragment;
 import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
@@ -31,12 +32,14 @@ public class HomeActivity extends AppCompatActivity {
 
     ApiService service;
     TokenManager tokenManager;
-    Call<ProjectResponse> call;
+    Call<ProjectResponse> callProject;
+    Call<AccessToken> callLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frameHomeContainer,new HomeFragment(), HomeFragment.class.getSimpleName()).commit();
 
@@ -48,7 +51,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
-
         init();
     }
 
@@ -61,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 switch (item.getItemId()) {
+                    // Als je voor homepage kiest
                     case R.id.item_home: {
                         Fragment account = fragmentManager.findFragmentByTag(AccountFragment.class.getSimpleName());
                         if (account != null) {
@@ -73,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     }
 
+                    // Als je voor account kiest
                     case R.id.item_account: {
                         Fragment account = fragmentManager.findFragmentByTag(AccountFragment.class.getSimpleName());
                         fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(HomeFragment.class.getSimpleName())).commit();
@@ -91,10 +95,10 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // Ophalen van projecten in de Laravel backend
     public void getProjects() {
-
-        call = service.projects();
-        call.enqueue(new Callback<ProjectResponse>() {
+        callProject = service.projects();
+        callProject.enqueue(new Callback<ProjectResponse>() {
             @Override
             public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
                 Log.w(TAG, "onResponse: " + response);
@@ -106,11 +110,8 @@ public class HomeActivity extends AppCompatActivity {
                         tokenManager.deleteToken();
                         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                         finish();
-
                     }
                 }
-
-
             }
 
             @Override
@@ -120,12 +121,39 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // Optie voor de user om uit te loggen
+    public void logout() {
+        callLogout = service.logout();
+        callLogout.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                Log.w(TAG, "onResponse: " + response);
+                if (response.isSuccessful()) {
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccessToken> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (call != null) {
-            call.cancel();
-            call = null;
+        // Projects
+        if (callProject != null) {
+            callProject.cancel();
+            callProject = null;
+        }
+        // Logout
+        if (callLogout != null) {
+            callLogout.cancel();
+            callLogout = null;
         }
     }
 }

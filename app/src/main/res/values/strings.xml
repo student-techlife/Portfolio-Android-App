@@ -68,4 +68,10 @@
     <!-- Errors -->
     <string name="err_email">The email must be a valid email address</string>
     <string name="err_password">The password must be at least 6 characters</string>
+
+    <string name="warn_logout">Weet je zeker dat je wil uitloggen?</string>
+
+    <!-- Buttons -->
+    <string name="btn_cancel">Annuleer</string>
+    <string name="btn_logout">Uitloggen</string>
 </resources>
