@@ -59,9 +59,9 @@ public class HomeFragment extends Fragment {
 
     private void init(){
         sharedPreferences = Objects.requireNonNull(getContext()).getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        recyclerView = view.findViewById(R.id.recyclerHome);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerView = view.findViewById(R.id.recyclerHome);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipeHome);
         MaterialToolbar toolbar = view.findViewById(R.id.toolbarHome);
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
