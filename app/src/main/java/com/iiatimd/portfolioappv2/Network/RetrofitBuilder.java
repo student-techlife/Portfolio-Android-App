@@ -2,6 +2,7 @@ package com.iiatimd.portfolioappv2.Network;
 
 import com.iiatimd.portfolioappv2.BuildConfig;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.iiatimd.portfolioappv2.TokenManager;
 
 import java.io.IOException;
 
@@ -53,6 +54,26 @@ public class RetrofitBuilder {
 
     public static <T> T createService(Class<T> service) {
         return retrofit.create(service);
+    }
+
+    public static <T> T createServiceWithAuth(Class<T> service, TokenManager tokenManager) {
+        OkHttpClient newClient = client.newBuilder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+
+                Request request = chain.request();
+                Request.Builder builder = request.newBuilder();
+
+                if (tokenManager.getToken().getAccessToken() != null) {
+                    builder.addHeader("Authorization", "Bearer " + tokenManager.getToken().getAccessToken());
+                }
+                request = builder.build();
+                return chain.proceed(request);
+            }
+        }).authenticator(CustomAuthenticator.getInstance(tokenManager)).build();
+
+        Retrofit newRetrofit = retrofit.newBuilder().client(newClient).build();
+        return newRetrofit.create(service);
     }
 
     public static Retrofit getRetrofit() {

@@ -16,4 +16,9 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> login(@Field("email") String email, @Field("password") String password);
 
+
+    @GET("projects")
+    Call<ProjectResponse> projects();
+
+
 }
