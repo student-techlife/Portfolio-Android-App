@@ -24,6 +24,9 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.HomeActivity;
 import com.iiatimd.portfolioappv2.R;
+import com.iiatimd.portfolioappv2.UserManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,8 @@ public class AccountFragment extends Fragment {
     private SharedPreferences preferences;
 //    private AccountPostAdapter adapter;
     private String imgUrl = "";
+
+    UserManager userManager;
 
     public AccountFragment() {}
 
@@ -66,6 +71,10 @@ public class AccountFragment extends Fragment {
         btnEditAccount = view.findViewById(R.id.btnEditAccount);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+    }
+
+    private void getData() {
+        txtName.setText(preferences.getString("name","") +" "+ preferences.getString("lastname", ""));
     }
 
     @Override
@@ -96,5 +105,22 @@ public class AccountFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    // NOTE Wordt enkel gebruikt als hidden state veranderd of de fragment
+    public void onHiddenChanged(boolean hidden) {
+
+        if (!hidden){
+            getData();
+        }
+
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 }

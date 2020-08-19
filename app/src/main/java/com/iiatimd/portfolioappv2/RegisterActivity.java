@@ -2,14 +2,11 @@ package com.iiatimd.portfolioappv2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -154,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // Sla tokens op
                     tokenManager.saveToken(response.body());
                     // Ga door naar Home scherm
-                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, UserInfoActivity.class));
                     finish();
                 } else {
                     handleErrors(response.errorBody());
