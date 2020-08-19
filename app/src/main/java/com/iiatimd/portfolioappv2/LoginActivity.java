@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.ApiError;
+import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 
@@ -40,9 +42,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "SignInActivity";
 
     ApiService service;
+    ApiService protectedService;
     TokenManager tokenManager;
+    UserManager userManager;
     AwesomeValidation validator;
     Call<AccessToken> call;
+    Call<User> userCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +57,15 @@ public class LoginActivity extends AppCompatActivity {
         service = RetrofitBuilder.createService(ApiService.class);
         validator = new AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
 
         // Als er al tokens bekend zijn ga dan door naar home scherm
         if (tokenManager.getToken().getAccessToken() != null) {
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
         }
+
+        protectedService = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
         layoutPassword = findViewById(R.id.txtLayoutPasswordSignIn);
         layoutEmail = findViewById(R.id.txtLayoutEmailSignIn);
@@ -136,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                     tokenManager.saveToken(response.body());
                     Toast.makeText(LoginActivity.this, "Logging succesvol!", Toast.LENGTH_SHORT).show();
                     // Ga naar home scherm na inloggen
+                    user();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish();
                 } else {
@@ -153,6 +162,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+    }
+
+    void user() {
+        userCall = protectedService.user();
+        userCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    userManager.saveUser(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
             }
         });
     }
@@ -191,6 +217,10 @@ public class LoginActivity extends AppCompatActivity {
         if (call != null) {
             call.cancel();
             call = null;
+        }
+        if (userCall != null) {
+            userCall.cancel();
+            userCall = null;
         }
     }
 }

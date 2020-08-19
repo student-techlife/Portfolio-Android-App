@@ -28,5 +28,6 @@ public interface ApiService {
     @GET("projects")
     Call<ProjectResponse> projects();
 
-
+    @GET("user")
+    Call<User> user();
 }
