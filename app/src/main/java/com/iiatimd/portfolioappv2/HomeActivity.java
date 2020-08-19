@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
+import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.Fragments.AccountFragment;
 import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
 import com.iiatimd.portfolioappv2.Network.ApiService;
@@ -28,10 +31,12 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private BottomNavigationView navigationView;
+//    private SharedPreferences userPref;
     private static final String TAG = "HomeActivity";
 
     ApiService service;
     TokenManager tokenManager;
+    UserManager userManager;
     Call<ProjectResponse> callProject;
     Call<AccessToken> callLogout;
 
@@ -44,12 +49,14 @@ public class HomeActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frameHomeContainer,new HomeFragment(), HomeFragment.class.getSimpleName()).commit();
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
 
         if (tokenManager.getToken() == null) {
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finish();
         }
 
+        // Service waarbij access token automatisch wordt meegegeven
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
         init();
     }
@@ -57,6 +64,8 @@ public class HomeActivity extends AppCompatActivity {
     private void init() {
         navigationView = findViewById(R.id.bottom_nav);
         fab = findViewById(R.id.fab);
+
+//        userPref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -123,12 +132,14 @@ public class HomeActivity extends AppCompatActivity {
 
     // Optie voor de user om uit te loggen
     public void logout() {
-        callLogout = service.logout();
+        callLogout = service.logout(tokenManager.getToken());
         callLogout.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 Log.w(TAG, "onResponse: " + response);
                 if (response.isSuccessful()) {
+//                    userPref.edit().clear().apply();
+                    userManager.deleteUser();
                     tokenManager.deleteToken();
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                     finish();

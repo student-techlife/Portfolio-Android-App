@@ -7,6 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
+import com.iiatimd.portfolioappv2.Entities.User;
 
 public interface ApiService {
 
@@ -23,7 +24,12 @@ public interface ApiService {
     Call<AccessToken> refresh(@Field("refresh_token") String refreshToken);
 
     @POST("logout")
-    Call<AccessToken> logout();
+    @FormUrlEncoded
+    Call<AccessToken> logout(@Field("access_token") AccessToken accessToken);
+
+    @POST("save_user_info")
+    @FormUrlEncoded
+    Call<AccessToken> save_user_info(@Field("name") String name, @Field("lastname") String lastname);
 
     @GET("projects")
     Call<ProjectResponse> projects();
