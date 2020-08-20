@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.iiatimd.portfolioappv2.Adapters.ProjectsAdapter;
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.Entities.ProjectCall;
@@ -34,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -122,6 +126,7 @@ public class HomeFragment extends Fragment {
 
                     arrayList.add(project);
                 }
+                saveData();
                 projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext()), arrayList);
                 recyclerView.setAdapter(projectAdapter);
 
@@ -131,9 +136,32 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<ProjectCall> call, Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
+                Log.w(TAG, "onFailure: Project data wordt uit geheugen gehaald" );
+
+                SharedPreferences sharedProjects = getContext().getApplicationContext().getSharedPreferences("projects", Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                String json = sharedProjects.getString("projects", null);
+                Type type = new TypeToken<ArrayList<Project>>() {}.getType();
+                arrayList = gson.fromJson(json, type);
+
+                projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext()), arrayList);
+                recyclerView.setAdapter(projectAdapter);
+
+                // Laat weten dat je offline bent en dus data uit geheugen ziet
+                Toast.makeText(getActivity().getApplicationContext(), "Je bent offline. Data is niet up to date en wordt opgehaald uit geheugen", Toast.LENGTH_LONG).show();
             }
         });
         refreshLayout.setRefreshing(false);
+    }
+
+    private void saveData() {
+        Log.w(TAG, "saveData: Data word opgeslagen");
+        SharedPreferences sharedProjects = getContext().getApplicationContext().getSharedPreferences("projects", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedProjects.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(arrayList);
+        editor.putString("projects", json);
+        editor.commit();
     }
 
     @Override
