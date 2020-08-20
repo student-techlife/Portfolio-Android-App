@@ -76,7 +76,7 @@ public class AddProjectActivity extends AppCompatActivity {
 
     private void init() {
 
-        Button btnPost = findViewById(R.id.btnAddProject);
+        Button btnProjectSave = findViewById(R.id.btnAddProject);
 
         // Project image view
         imgProject = findViewById(R.id.imgAddProject);
@@ -88,7 +88,7 @@ public class AddProjectActivity extends AppCompatActivity {
         txtNumAantalUur = findViewById(R.id.txtNumAantalUur);
 
         // Beschrijving
-        txtDescProject = findViewById(R.id.txtDescAddPost);
+        txtDescProject = findViewById(R.id.txtDescProject);
 
         // Date
         dateProjOplevering = findViewById(R.id.dateProjOplevering);
@@ -117,7 +117,7 @@ public class AddProjectActivity extends AppCompatActivity {
 
         // Check en start save functie
         // TODO misschien validation in aparte functie
-        btnPost.setOnClickListener(v->{
+        btnProjectSave.setOnClickListener(v->{
             if (!txtDescProject.getText().toString().isEmpty()) {
                 saveProject();
             } else {
