@@ -19,15 +19,16 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     sleep(1500);
-                    SharedPreferences userPref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-                    boolean isLoggedIn = userPref.getBoolean("isLoggedIn", false);
-
-                    if (isLoggedIn) {
-                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                        finish();
-                    } else {
-                        isFirstTime();
-                    }
+//                    SharedPreferences userPref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+//                    boolean isLoggedIn = userPref.getBoolean("isLoggedIn", false);
+//
+//                    if (isLoggedIn) {
+//                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+//                        finish();
+//                    } else {
+//                        isFirstTime();
+//                    }
+                    isFirstTime();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
