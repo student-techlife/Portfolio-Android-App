@@ -4,9 +4,9 @@ import java.util.List;
 
 public class ProjectResponse {
 
-    List<Project> data;
+    Project project ;
 
-    public List<Project> getData() {
-        return data;
+    public Project getData() {
+        return project;
     }
 }

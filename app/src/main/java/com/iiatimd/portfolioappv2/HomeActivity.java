@@ -1,13 +1,13 @@
 package com.iiatimd.portfolioappv2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,8 +15,8 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
-import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
-import com.iiatimd.portfolioappv2.Entities.User;
+import com.iiatimd.portfolioappv2.Entities.Project;
+import com.iiatimd.portfolioappv2.Entities.ProjectCall;
 import com.iiatimd.portfolioappv2.Fragments.AccountFragment;
 import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
 import com.iiatimd.portfolioappv2.Network.ApiService;
@@ -31,13 +31,14 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private BottomNavigationView navigationView;
+    private static final int GALLERY_ADD_PROJECT = 2;
 //    private SharedPreferences userPref;
     private static final String TAG = "HomeActivity";
 
     ApiService service;
     TokenManager tokenManager;
     UserManager userManager;
-    Call<ProjectResponse> callProject;
+    Call<ProjectCall> callProject;
     Call<AccessToken> callLogout;
 
     @Override
@@ -51,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
 
+        // Als je geen tokens meer hebt, moet je weer opnieuw inloggen
         if (tokenManager.getToken() == null) {
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finish();
@@ -61,9 +63,22 @@ public class HomeActivity extends AppCompatActivity {
         init();
     }
 
+    public TokenManager getToken() {
+        TokenManager token = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        return token;
+    }
+
     private void init() {
         navigationView = findViewById(R.id.bottom_nav);
         fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, GALLERY_ADD_PROJECT);
+
+//            setContentView(R.layout.activity_add_project);
+        });
 
 //        userPref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
 
@@ -80,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(AccountFragment.class.getSimpleName())).commit();
                             // Show Home fragment
                             fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag(HomeFragment.class.getSimpleName())).commit();
-                            getProjects();
+//                            getProjects();
                         }
                         break;
                     }
@@ -104,32 +119,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Ophalen van projecten in de Laravel backend
-    public void getProjects() {
-        callProject = service.projects();
-        callProject.enqueue(new Callback<ProjectResponse>() {
-            @Override
-            public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
-                Log.w(TAG, "onResponse: " + response);
-
-                if (response.isSuccessful()) {
-
-                } else {
-                    if (response.code() == 400) {
-                        tokenManager.deleteToken();
-                        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                        finish();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ProjectResponse> call, Throwable t) {
-                Log.w(TAG, "onFailure: " + t.getMessage());
-            }
-        });
-    }
-
     // Optie voor de user om uit te loggen
     public void logout() {
         callLogout = service.logout(tokenManager.getToken());
@@ -141,6 +130,7 @@ public class HomeActivity extends AppCompatActivity {
 //                    userPref.edit().clear().apply();
                     userManager.deleteUser();
                     tokenManager.deleteToken();
+
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                     finish();
                 }
@@ -156,15 +146,21 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Projects
-        if (callProject != null) {
-            callProject.cancel();
-            callProject = null;
-        }
         // Logout
         if (callLogout != null) {
             callLogout.cancel();
             callLogout = null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_ADD_PROJECT && resultCode == RESULT_OK) {
+            Uri imgUri = data.getData();
+            Intent intent = new Intent(HomeActivity.this, AddProjectActivity.class);
+            intent.setData(imgUri);
+            startActivity(intent);
         }
     }
 }

@@ -143,8 +143,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     tokenManager.saveToken(response.body());
                     Toast.makeText(LoginActivity.this, "Logging succesvol!", Toast.LENGTH_SHORT).show();
-                    // Ga naar home scherm na inloggen
                     user();
+
+                    // Ga naar home scherm na inloggen
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish();
                 } else {
