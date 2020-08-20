@@ -1,14 +1,9 @@
 package com.iiatimd.portfolioappv2.Entities;
 
 public class Project {
-
-    int id;
-    String name;
-    String website;
-    String client;
-    int hours;
-    String desc;
-    String photo;
+    private int id,aantalUur;
+    private String created_at,desc,photo,name,website,opdrachtgever,datumOplevering;
+    private User user;
 
     public int getId() {
         return id;
@@ -18,36 +13,16 @@ public class Project {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public int getAantalUur() { return aantalUur; }
+
+    public void setAantalUur(int aantalUur) { this.aantalUur = aantalUur; }
+
+    public String getDate() {
+        return created_at;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getClient() {
-        return client;
-    }
-
-    public void setClient(String client) {
-        this.client = client;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(int hours) {
-        this.hours = hours;
+    public void setDate(String date) {
+        this.created_at = date;
     }
 
     public String getDesc() {
@@ -64,5 +39,25 @@ public class Project {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getProjectName() { return name; }
+
+    public void setProjectName(String name) { this.name = name; }
+
+    public String getWebsite() { return website; }
+
+    public void setWebsite(String website) { this.website = website; }
+
+    public String getOpdrachtgever() { return opdrachtgever; }
+
+    public void setOpdrachtgever(String opdrachtgever) { this.opdrachtgever = opdrachtgever; }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
