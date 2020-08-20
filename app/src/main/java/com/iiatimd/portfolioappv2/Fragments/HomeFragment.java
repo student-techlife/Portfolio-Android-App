@@ -20,10 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.iiatimd.portfolioappv2.Adapters.ProjectsAdapter;
 import com.iiatimd.portfolioappv2.Entities.Project;
+import com.iiatimd.portfolioappv2.Entities.ProjectCall;
+import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.HomeActivity;
+import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.R;
+import com.iiatimd.portfolioappv2.TokenManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +40,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
     
@@ -42,10 +50,14 @@ public class HomeFragment extends Fragment {
     public static RecyclerView recyclerView;
     public static ArrayList<Project> arrayList;
     private SwipeRefreshLayout refreshLayout;
-//    private ProjectAdapter projectAdapter;
+    private ProjectsAdapter projectAdapter;
     private SharedPreferences sharedPreferences;
 
     private static final String TAG = "HomeFragment";
+
+    ApiService service;
+    TokenManager tokenManager;
+    Call<ProjectCall> callProject;
 
     public HomeFragment(){}
 
@@ -53,110 +65,95 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.layout_home,container,false);
+
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)getContext()).getToken());
         init();
         return view;
     }
 
     private void init(){
         sharedPreferences = Objects.requireNonNull(getContext()).getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-//        recyclerView = view.findViewById(R.id.recyclerHome);
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView = view.findViewById(R.id.recyclerHome);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipeHome);
         MaterialToolbar toolbar = view.findViewById(R.id.toolbarHome);
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-//        ((HomeActivity)getActivity()).getProjects();
+        getProjects();
 
-        // Swipe down voor een refresh
-//        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                ((HomeActivity)getActivity()).getProjects();
-//            }
-//        });
+        // Swipe down voor een refresh van de pagina
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getProjects();
+            }
+        });
     }
 
-//    private void getPosts() {
-//        arrayList = new ArrayList<>();
-//        refreshLayout.setRefreshing(true);
-//
-//        StringRequest request = new StringRequest(Request.Method.GET, RetrofitBuilder.PROJECTS, response -> {
-//
-//            try {
-//                JSONObject object = new JSONObject(response);
-//                if (object.getBoolean("success")){
-//                    JSONArray array = new JSONArray(object.getString("projects"));
-//                    for (int i = 0; i < array.length(); i++) {
-//                        JSONObject projectObject = array.getJSONObject(i);
-//                        JSONObject userObject = projectObject.getJSONObject("user");
-//
-//                        User user = new User();
-//                        user.setId(userObject.getInt("id"));
-//                        user.setUserName(userObject.getString("name")+" "+userObject.getString("lastname"));
-//                        user.setPhoto(userObject.getString("photo"));
-//
-//                        Project project = new Project();
-//                        project.setId(projectObject.getInt("id"));
-//                        project.setUser(user);
-//                        project.setLikes(projectObject.getInt("likesCount"));
-//                        project.setComments(projectObject.getInt("commentsCount"));
-//                        project.setDate(projectObject.getString("created_at"));
-//                        project.setDesc(projectObject.getString("desc"));
-//                        project.setPhoto(projectObject.getString("photo"));
-//                        project.setSelfLike(projectObject.getBoolean("selfLike"));
-//
-//                        arrayList.add(project);
-//                    }
-//
-//                    projectAdapter = new ProjectAdapter(Objects.requireNonNull(getContext()),arrayList);
-//                    recyclerView.setAdapter(projectAdapter);
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            refreshLayout.setRefreshing(false);
-//
-//        },error -> {
-//            error.printStackTrace();
-//            refreshLayout.setRefreshing(false);
-//        }){
-//
-//            // provide token in header
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                String token = sharedPreferences.getString("token","");
-//                HashMap<String,String> map = new HashMap<>();
-//                map.put("Authorization","Bearer "+token);
-//                return map;
-//            }
-//        };
-//
-//        RequestQueue queue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
-//        queue.add(request);
-//    }
-//
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_search,menu);
-//        MenuItem item = menu.findItem(R.id.search);
-//        SearchView searchView = (SearchView)item.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                postsAdapter.getFilter().filter(newText);
-//                return false;
-//            }
-//        });
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+    private void getProjects() {
+        arrayList = new ArrayList<>();
+        refreshLayout.setRefreshing(true);
+
+//        ((HomeActivity) getActivity()).getProjects();
+        callProject = service.projects();
+        callProject.enqueue(new Callback<ProjectCall>() {
+            @Override
+            public void onResponse(Call<ProjectCall> call, Response<ProjectCall> response) {
+                Log.w(TAG, "onResponse: " + response);
+
+//                Log.w(TAG, "onResponse: " + response.body().getProjects().get(2).getWebsite());
+//                Log.w(TAG, "onResponse: " + response.body().getProjects());
+
+                for (int i = 0; i < response.body().getProjects().toArray().length; i++) {
+
+                    User user = new User();
+                    user.setId(sharedPreferences.getInt("id", 0));
+                    user.setName(sharedPreferences.getString("name", ""));
+                    user.setLastname(sharedPreferences.getString("lastname", ""));
+
+                    Project project = new Project();
+                    project.setUser(user);
+                    project.setId(response.body().getProjects().get(i).getId());
+                    project.setProjectName(response.body().getProjects().get(i).getProjectName());
+                    project.setDate(response.body().getProjects().get(i).getDate());
+                    project.setDesc(response.body().getProjects().get(i).getDesc());
+
+                    arrayList.add(project);
+                }
+                projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext()), arrayList);
+                recyclerView.setAdapter(projectAdapter);
+
+//                Log.w(TAG, "onResponse: " + arrayList );
+            }
+
+            @Override
+            public void onFailure(Call<ProjectCall> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search,menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView)item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                projectAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }
