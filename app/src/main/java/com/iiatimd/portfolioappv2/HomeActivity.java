@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
 
+        // Als je geen tokens meer hebt, moet je weer opnieuw inloggen
         if (tokenManager.getToken() == null) {
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finish();
