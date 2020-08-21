@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView txtSignIn;
     private Button btnSignUp;
 
-    private static final String TAG = "SignUpActivity";
+    private static final String TAG = "RegisterActivity";
 
     ApiService service;
     Call<AccessToken> call;

@@ -33,17 +33,10 @@ import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.R;
 import com.iiatimd.portfolioappv2.TokenManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +44,7 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
     
     private View view;
-    public static RecyclerView recyclerView;
+    public static RecyclerView recyclerViewHome;
     public static ArrayList<Project> arrayList;
     private SwipeRefreshLayout refreshLayout;
     private ProjectsAdapter projectAdapter;
@@ -77,9 +70,9 @@ public class HomeFragment extends Fragment {
 
     private void init(){
         sharedPreferences = Objects.requireNonNull(getContext()).getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        recyclerView = view.findViewById(R.id.recyclerHome);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewHome = view.findViewById(R.id.recyclerHome);
+        recyclerViewHome.setHasFixedSize(true);
+        recyclerViewHome.setLayoutManager(new LinearLayoutManager(getContext().getApplicationContext()));
         refreshLayout = view.findViewById(R.id.swipeHome);
         MaterialToolbar toolbar = view.findViewById(R.id.toolbarHome);
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
@@ -88,12 +81,7 @@ public class HomeFragment extends Fragment {
         getProjects();
 
         // Swipe down voor een refresh van de pagina
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getProjects();
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> getProjects());
     }
 
     private void getProjects() {
@@ -128,7 +116,7 @@ public class HomeFragment extends Fragment {
                 }
                 saveData();
                 projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext()), arrayList);
-                recyclerView.setAdapter(projectAdapter);
+                recyclerViewHome.setAdapter(projectAdapter);
 
 //                Log.w(TAG, "onResponse: " + arrayList );
             }
@@ -144,8 +132,8 @@ public class HomeFragment extends Fragment {
                 Type type = new TypeToken<ArrayList<Project>>() {}.getType();
                 arrayList = gson.fromJson(json, type);
 
-                projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext()), arrayList);
-                recyclerView.setAdapter(projectAdapter);
+                projectAdapter = new ProjectsAdapter(Objects.requireNonNull(getContext().getApplicationContext()), arrayList);
+                recyclerViewHome.setAdapter(projectAdapter);
 
                 // Laat weten dat je offline bent en dus data uit geheugen ziet
                 Toast.makeText(getActivity().getApplicationContext(), "Je bent offline. Data is niet up to date en wordt opgehaald uit geheugen", Toast.LENGTH_LONG).show();

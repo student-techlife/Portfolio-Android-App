@@ -41,13 +41,15 @@ public class AccountFragment extends Fragment {
     private CircleImageView imgProfile;
     private TextView txtName,txtPostsCount;
     private Button btnEditAccount;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewAccount;
     private ArrayList<Project> arrayList;
     private SharedPreferences preferences;
 //    private AccountPostAdapter adapter;
     private String imgUrl = "";
 
     UserManager userManager;
+
+    private static final String TAG = "AccountFragment";
 
     public AccountFragment() {}
 
@@ -67,14 +69,20 @@ public class AccountFragment extends Fragment {
         imgProfile = view.findViewById(R.id.imgAccountProfile);
         txtName = view.findViewById(R.id.txtAccountName);
         txtPostsCount = view.findViewById(R.id.txtAccountPostCount);
-        recyclerView = view.findViewById(R.id.recyclerAccount);
+        recyclerViewAccount = view.findViewById(R.id.recyclerAccount);
         btnEditAccount = view.findViewById(R.id.btnEditAccount);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recyclerViewAccount.setHasFixedSize(true);
+        recyclerViewAccount.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 
     private void getData() {
         txtName.setText(preferences.getString("name","") +" "+ preferences.getString("lastname", ""));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        recyclerViewAccount.setAdapter(null);
     }
 
     @Override
