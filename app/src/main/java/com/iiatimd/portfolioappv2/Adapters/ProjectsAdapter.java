@@ -52,6 +52,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 //        Log.w(TAG, "onBindViewHolder: Test!");
         holder.txtName.setText(project.getProjectName());
         holder.txtDate.setText(project.getDate());
+        holder.imgProject.setImageResource(R.drawable.project);
 //        holder.txtDesc.setText(project.getDesc());
 
         if (project.getUser().getId()==preferences.getInt("id",0)) {
@@ -128,7 +129,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
         private TextView txtName,txtDate,txtDesc,txtLikes,txtComments;
         private CircleImageView imgProfile;
-        private ImageView imgPost;
+        private ImageView imgProject;
         private ImageButton btnProjectOption,btnLike,btnComment;
 
         public ProjectsHolder(@NonNull View itemView) {
@@ -137,7 +138,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             txtDate = itemView.findViewById(R.id.txtPostDate);
 //            txtDesc = itemView.findViewById(R.id.txtPostDesc);
 //            imgProfile = itemView.findViewById(R.id.imgPostProfile);
-//            imgProject = itemView.findViewById(R.id.imgPostPhoto);
+            imgProject = itemView.findViewById(R.id.imgProjectPhoto);
             btnProjectOption = itemView.findViewById(R.id.btnProjectOption);
             btnProjectOption.setVisibility(View.GONE);
         }

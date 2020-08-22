@@ -64,6 +64,10 @@
     <!-- Placeholders -->
     <string name="txt_placeholder">Hier komt tekst</string>
     <string name="desc_arrow_back">Terug knop</string>
+    <string name="layout_project_title">Project titel</string>
+    <string name="layout_project_second_line">Subregel waar extra tekst komt</string>
+    <string name="layout_project_img">Hier komt een project image</string>
+    <string name="btn_placeholder">Button</string>
 
     <!-- Errors -->
     <string name="err_email">The email must be a valid email address</string>
