@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
+import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,10 +51,16 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public void onBindViewHolder(@NonNull ProjectsHolder holder, int position) {
         Project project = list.get(position);
-//        Log.w(TAG, "onBindViewHolder: Test!");
+
+        // Toon de foto van je project en als die er niet is toon default.
+        if (project.getPhoto() != "") {
+            Picasso.get().load(RetrofitBuilder.URL + "projects/" + project.getPhoto()).into(holder.imgProject);
+        } else {
+            holder.imgProject.setImageResource(R.drawable.project);
+        }
+
         holder.txtName.setText(project.getProjectName());
         holder.txtDate.setText(project.getDate());
-        holder.imgProject.setImageResource(R.drawable.project);
 //        holder.txtDesc.setText(project.getDesc());
 
         if (project.getUser().getId()==preferences.getInt("id",0)) {

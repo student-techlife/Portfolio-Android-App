@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -134,9 +136,10 @@ public class AddProjectActivity extends AppCompatActivity {
         String client = txtOpdrachtgever.getText().toString();
 //        String completion_date = dateProjOplevering.getText().toString();
         String hours = txtNumAantalUur.getText().toString();
+        String photo = convertToString(bitmap);
         String description = txtDescProject.getText().toString();
 
-        call = protectedService.save_project(name,website,client,hours,description);
+        call = protectedService.save_project(name,website,client,photo,hours,description);
         call.enqueue(new Callback<ProjectResponse>() {
             @Override
             public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
@@ -188,7 +191,18 @@ public class AddProjectActivity extends AppCompatActivity {
     public void changePhoto(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, GALLERY_CHANGE_PROJECT);
+    }
+
+    private String convertToString(Bitmap bitmap) {
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,25, byteArrayOutputStream);
+            byte[] imgByte = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        }
+        return "";
     }
 
     // Change photo in view
