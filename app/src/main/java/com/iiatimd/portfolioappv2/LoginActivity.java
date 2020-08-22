@@ -163,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
+                Toast.makeText(LoginActivity.this, "Je bent offline, maakt verbinding met het internet om te kunnen inloggen", Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
     private static final int GALLERY_ADD_PROJECT = 2;
 //    private SharedPreferences userPref;
+
     private static final String TAG = "HomeActivity";
 
     ApiService service;
@@ -128,9 +129,13 @@ public class HomeActivity extends AppCompatActivity {
                 Log.w(TAG, "onResponse: " + response);
                 if (response.isSuccessful()) {
 //                    userPref.edit().clear().apply();
+
+                    // Verwijder user en tokens uit memory
                     userManager.deleteUser();
                     tokenManager.deleteToken();
-
+                    // Zet recyclerview op null, belangrijk anders ontstaat er een memory leak!
+                    HomeFragment.recyclerViewHome = null;
+                    // Keer terug naar LoginActivity
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                     finish();
                 }

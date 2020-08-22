@@ -2,6 +2,7 @@ package com.iiatimd.portfolioappv2;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -67,7 +68,7 @@ public class AddProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_project);
 
-        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("user", MODE_PRIVATE);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         protectedService = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
@@ -163,10 +164,10 @@ public class AddProjectActivity extends AppCompatActivity {
 
                 // Voeg project object toe aan arraylist in HomeFragment
                 HomeFragment.arrayList.add(0,project);
-                Objects.requireNonNull(HomeFragment.recyclerView.getAdapter()).notifyItemInserted(0);
-                HomeFragment.recyclerView.getAdapter().notifyDataSetChanged();
                 // Toon Toast dat aanmaken gelukt is.
                 Toast.makeText(AddProjectActivity.this, "Project aangemaakt!", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(HomeFragment.recyclerViewHome.getAdapter()).notifyItemInserted(0);
+                HomeFragment.recyclerViewHome.getAdapter().notifyDataSetChanged();
                 finish();
             }
 

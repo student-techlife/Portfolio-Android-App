@@ -20,14 +20,12 @@ import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -37,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView txtSignIn;
     private Button btnSignUp;
 
-    private static final String TAG = "SignUpActivity";
+    private static final String TAG = "RegisterActivity";
 
     ApiService service;
     Call<AccessToken> call;
@@ -150,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.w(TAG, "onResponse: " + response.body() );
                     // Sla tokens op
                     tokenManager.saveToken(response.body());
-                    // Ga door naar Home scherm
+                    // Ga door naar User Info scherm
                     startActivity(new Intent(RegisterActivity.this, UserInfoActivity.class));
                     finish();
                 } else {
