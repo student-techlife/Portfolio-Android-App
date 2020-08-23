@@ -78,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
             intent.setType("image/*");
             startActivityForResult(intent, GALLERY_ADD_PROJECT);
 
+            // TODO Misschien dit toch weglaten?
 //            setContentView(R.layout.activity_add_project);
         });
 

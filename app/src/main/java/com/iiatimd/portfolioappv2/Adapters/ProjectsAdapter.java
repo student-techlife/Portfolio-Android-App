@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
+import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,10 +51,15 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public void onBindViewHolder(@NonNull ProjectsHolder holder, int position) {
         Project project = list.get(position);
-//        Log.w(TAG, "onBindViewHolder: Test!");
+        // Get en show project image
+        Picasso.get().load(RetrofitBuilder.URL + "projects/" + project.getPhoto()).into(holder.imgProject);
+        // Get en show profiel image die hoort bij het project
+        if (project.getUser().getPhoto() != null) {
+            Picasso.get().load(RetrofitBuilder.URL + "profiles/" + project.getUser().getPhoto()).into(holder.imgProfile);
+        }
+
         holder.txtName.setText(project.getProjectName());
         holder.txtDate.setText(project.getDate());
-        holder.imgProject.setImageResource(R.drawable.project);
 //        holder.txtDesc.setText(project.getDesc());
 
         if (project.getUser().getId()==preferences.getInt("id",0)) {
@@ -137,7 +144,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             txtName = itemView.findViewById(R.id.txtPostName);
             txtDate = itemView.findViewById(R.id.txtPostDate);
 //            txtDesc = itemView.findViewById(R.id.txtPostDesc);
-//            imgProfile = itemView.findViewById(R.id.imgPostProfile);
+            imgProfile = itemView.findViewById(R.id.imgProjectProfile);
             imgProject = itemView.findViewById(R.id.imgProjectPhoto);
             btnProjectOption = itemView.findViewById(R.id.btnProjectOption);
             btnProjectOption.setVisibility(View.GONE);

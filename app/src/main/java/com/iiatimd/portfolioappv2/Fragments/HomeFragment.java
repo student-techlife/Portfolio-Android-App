@@ -49,11 +49,12 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ProjectsAdapter projectAdapter;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences projectPreferences;
 
     private static final String TAG = "HomeFragment";
 
     ApiService service;
-    TokenManager tokenManager;
+//    TokenManager tokenManager;
     Call<ProjectCall> callProject;
 
     public HomeFragment(){}
@@ -69,6 +70,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
+        projectPreferences = getContext().getApplicationContext().getSharedPreferences("projects", Context.MODE_PRIVATE);
         sharedPreferences = Objects.requireNonNull(getContext()).getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         recyclerViewHome = view.findViewById(R.id.recyclerHome);
         recyclerViewHome.setHasFixedSize(true);
@@ -88,7 +90,7 @@ public class HomeFragment extends Fragment {
         arrayList = new ArrayList<>();
         refreshLayout.setRefreshing(true);
 
-//        ((HomeActivity) getActivity()).getProjects();
+        // Maak een API request call
         callProject = service.projects();
         callProject.enqueue(new Callback<ProjectCall>() {
             @Override
@@ -104,11 +106,16 @@ public class HomeFragment extends Fragment {
                     user.setId(sharedPreferences.getInt("id", 0));
                     user.setName(sharedPreferences.getString("name", ""));
                     user.setLastname(sharedPreferences.getString("lastname", ""));
+                    user.setPhoto(sharedPreferences.getString("photo", ""));
 
                     Project project = new Project();
                     project.setUser(user);
                     project.setId(response.body().getProjects().get(i).getId());
+                    project.setPhoto(response.body().getProjects().get(i).getPhoto());
                     project.setProjectName(response.body().getProjects().get(i).getProjectName());
+                    // Website
+                    // Opdrachtgever
+                    // Aantal uur aan gewerkt
                     project.setDate(response.body().getProjects().get(i).getDate());
                     project.setDesc(response.body().getProjects().get(i).getDesc());
 
@@ -126,9 +133,8 @@ public class HomeFragment extends Fragment {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
                 Log.w(TAG, "onFailure: Project data wordt uit geheugen gehaald" );
 
-                SharedPreferences sharedProjects = getContext().getApplicationContext().getSharedPreferences("projects", Context.MODE_PRIVATE);
                 Gson gson = new Gson();
-                String json = sharedProjects.getString("projects", null);
+                String json = projectPreferences.getString("projects", null);
                 Type type = new TypeToken<ArrayList<Project>>() {}.getType();
                 arrayList = gson.fromJson(json, type);
 
@@ -144,8 +150,7 @@ public class HomeFragment extends Fragment {
 
     private void saveData() {
         Log.w(TAG, "saveData: Data word opgeslagen");
-        SharedPreferences sharedProjects = getContext().getApplicationContext().getSharedPreferences("projects", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedProjects.edit();
+        SharedPreferences.Editor editor = projectPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(arrayList);
         editor.putString("projects", json);

@@ -1,11 +1,16 @@
 package com.iiatimd.portfolioappv2;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,6 +20,9 @@ import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -28,6 +36,8 @@ public class UserInfoActivity extends AppCompatActivity {
     private TextView txtSelectPhoto;
     private Button btnContinue;
     private CircleImageView circleImageView;
+    private static final int GALLERY_ADD_PROFILE = 1;
+    private Bitmap bitmap = null;
 
     private static final String TAG = "UserInfoActivity";
 
@@ -56,20 +66,30 @@ public class UserInfoActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtNameUserInfo);
         txtLastname = findViewById(R.id.txtLastnameUserInfo);
         btnContinue = findViewById(R.id.btnContinue);
+        txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
 
+        // Validate en start save functie
         btnContinue.setOnClickListener(v->{
             if (validate()) {
                 saveUserInfo();
             }
+        });
+
+        // Kies profielfoto van gallery
+        txtSelectPhoto.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, GALLERY_ADD_PROFILE);
         });
     }
 
     private void saveUserInfo() {
         String name = txtName.getText().toString();
         String lastname = txtLastname.getText().toString();
+        String photo = convertToString(bitmap);
 
-        call = protectedService.save_user_info(name, lastname);
+        call = protectedService.save_user_info(name, lastname, photo);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
@@ -107,12 +127,12 @@ public class UserInfoActivity extends AppCompatActivity {
     private boolean validate() {
         if (txtName.getText().toString().isEmpty()) {
             layoutName.setErrorEnabled(true);
-            layoutName.setError("Name is Required");
+            layoutName.setError("Naam is verplicht");
             return false;
         }
         if (txtLastname.getText().toString().isEmpty()) {
             layoutLastname.setErrorEnabled(true);
-            layoutLastname.setError("Lastname is Required");
+            layoutLastname.setError("Achternaam is verplicht");
             return false;
         }
 
@@ -130,5 +150,31 @@ public class UserInfoActivity extends AppCompatActivity {
             userCall.cancel();
             userCall = null;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_ADD_PROFILE && resultCode == RESULT_OK) {
+            Uri imgUri = data.getData();
+            circleImageView.setImageURI(imgUri);
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imgUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String convertToString(Bitmap bitmap) {
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 25, byteArrayOutputStream);
+            byte [] array = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(array, Base64.DEFAULT);
+        }
+
+        return "";
     }
 }
