@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment {
                     user.setId(sharedPreferences.getInt("id", 0));
                     user.setName(sharedPreferences.getString("name", ""));
                     user.setLastname(sharedPreferences.getString("lastname", ""));
+                    user.setPhoto(sharedPreferences.getString("photo", ""));
 
                     Project project = new Project();
                     project.setUser(user);

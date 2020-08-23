@@ -51,12 +51,11 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public void onBindViewHolder(@NonNull ProjectsHolder holder, int position) {
         Project project = list.get(position);
-
-        // Toon de foto van je project en als die er niet is toon default.
-        if (project.getPhoto() != "") {
-            Picasso.get().load(RetrofitBuilder.URL + "projects/" + project.getPhoto()).into(holder.imgProject);
-        } else {
-            holder.imgProject.setImageResource(R.drawable.project);
+        // Get en show project image
+        Picasso.get().load(RetrofitBuilder.URL + "projects/" + project.getPhoto()).into(holder.imgProject);
+        // Get en show profiel image die hoort bij het project
+        if (project.getUser().getPhoto() != null) {
+            Picasso.get().load(RetrofitBuilder.URL + "profiles/" + project.getUser().getPhoto()).into(holder.imgProfile);
         }
 
         holder.txtName.setText(project.getProjectName());
@@ -145,7 +144,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             txtName = itemView.findViewById(R.id.txtPostName);
             txtDate = itemView.findViewById(R.id.txtPostDate);
 //            txtDesc = itemView.findViewById(R.id.txtPostDesc);
-//            imgProfile = itemView.findViewById(R.id.imgPostProfile);
+            imgProfile = itemView.findViewById(R.id.imgProjectProfile);
             imgProject = itemView.findViewById(R.id.imgProjectPhoto);
             btnProjectOption = itemView.findViewById(R.id.btnProjectOption);
             btnProjectOption.setVisibility(View.GONE);

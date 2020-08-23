@@ -31,7 +31,7 @@ public interface ApiService {
 
     @POST("save_user_info")
     @FormUrlEncoded
-    Call<AccessToken> save_user_info(@Field("name") String name, @Field("lastname") String lastname);
+    Call<AccessToken> save_user_info(@Field("name") String name, @Field("lastname") String lastname, @Field("photo") String photo);
 
     @GET("projects")
     Call<ProjectCall> projects();
