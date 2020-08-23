@@ -78,4 +78,8 @@
     <!-- Buttons -->
     <string name="btn_cancel">Annuleer</string>
     <string name="btn_logout">Uitloggen</string>
+
+    <!-- Project show page -->
+    <string name="project_hours">Aantal uur aan gewerkt</string>
+    <string name="project_oplevering">Datum van oplevering</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.iiatimd.portfolioappv2.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -16,7 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
+import com.iiatimd.portfolioappv2.HomeActivity;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
+import com.iiatimd.portfolioappv2.ProjectShowActivity;
 import com.iiatimd.portfolioappv2.R;
 import com.squareup.picasso.Picasso;
 
@@ -68,24 +73,45 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             holder.btnProjectOption.setVisibility(View.GONE);
         }
 
+        holder.projectCard.setOnClickListener(v->{
+            Log.w(TAG, "onBindViewHolder: Je hebt op een card geklikt " + project.getId());
+
+            // Maak variables
+            int id = project.getId();
+            int aantalUur = project.getAantalUur();
+            String projectName = project.getProjectName();
+            String website = project.getWebsite();
+            String client = project.getOpdrachtgever();
+            String desc = project.getDesc();
+            String photo = project.getPhoto();
+
+            // Activity intent
+            Intent intent = new Intent(v.getContext(),ProjectShowActivity.class);
+            intent.putExtra("id", id);
+            intent.putExtra("projectName", projectName);
+            intent.putExtra("website", website);
+            intent.putExtra("client", client);
+            intent.putExtra("aantalUur", aantalUur);
+            intent.putExtra("desc", desc);
+            intent.putExtra("photo", photo);
+            v.getContext().startActivity(intent);
+        });
+
         holder.btnProjectOption.setOnClickListener(v->{
             PopupMenu popupMenu = new PopupMenu(context,holder.btnProjectOption);
             popupMenu.inflate(R.menu.menu_project_options);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
+            popupMenu.setOnMenuItemClickListener(item -> {
 
-                    switch (item.getItemId()) {
-                        case R.id.item_edit: {
+                switch (item.getItemId()) {
+                    case R.id.item_edit: {
 //                            return true;
-                        }
-                        case R.id.item_delete: {
+                    }
+                    case R.id.item_delete: {
 //                            deleteProject(project.getId(),position);
 //                            return true;
-                        }
                     }
-                    return false;
                 }
+                return false;
             });
             popupMenu.show();
         });
@@ -134,10 +160,11 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
     class ProjectsHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtName,txtDate,txtDesc,txtLikes,txtComments;
+        private TextView txtName,txtDate,txtDesc;
         private CircleImageView imgProfile;
         private ImageView imgProject;
-        private ImageButton btnProjectOption,btnLike,btnComment;
+        private ImageButton btnProjectOption;
+        private LinearLayout projectCard;
 
         public ProjectsHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,6 +174,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             imgProfile = itemView.findViewById(R.id.imgProjectProfile);
             imgProject = itemView.findViewById(R.id.imgProjectPhoto);
             btnProjectOption = itemView.findViewById(R.id.btnProjectOption);
+            projectCard = itemView.findViewById(R.id.projectCard);
             btnProjectOption.setVisibility(View.GONE);
         }
     }
