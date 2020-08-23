@@ -36,6 +36,9 @@ public interface ApiService {
     @GET("projects")
     Call<ProjectCall> projects();
 
+    @GET("projects/my_projects")
+    Call<ProjectCall> myProjects();
+
     @POST("projects/create")
     @FormUrlEncoded
     Call<ProjectResponse> save_project(@Field("name") String name, @Field("website") String website, @Field("client") String client,
