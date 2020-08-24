@@ -113,9 +113,10 @@ public class HomeFragment extends Fragment {
                     project.setId(response.body().getProjects().get(i).getId());
                     project.setPhoto(response.body().getProjects().get(i).getPhoto());
                     project.setProjectName(response.body().getProjects().get(i).getProjectName());
-                    // Website
-                    // Opdrachtgever
-                    // Aantal uur aan gewerkt
+                    project.setWebsite(response.body().getProjects().get(i).getWebsite());
+                    project.setOpdrachtgever(response.body().getProjects().get(i).getOpdrachtgever());
+                    project.setAantalUur(response.body().getProjects().get(i).getAantalUur());
+                    project.setDatumOplevering(response.body().getProjects().get(i).getDatumOplerving());
                     project.setDate(response.body().getProjects().get(i).getDate());
                     project.setDesc(response.body().getProjects().get(i).getDesc());
 

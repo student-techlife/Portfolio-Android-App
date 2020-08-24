@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddProjectActivity"></activity>
+        <activity android:name=".ProjectShowActivity"></activity>
+        <activity android:name=".AddProjectActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".OnBoardActivity" />
         <activity android:name=".MainActivity">
