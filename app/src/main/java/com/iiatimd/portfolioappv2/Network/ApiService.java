@@ -39,6 +39,10 @@ public interface ApiService {
     @GET("projects/my_projects")
     Call<ProjectCall> myProjects();
 
+    @POST("projects/delete")
+    @FormUrlEncoded
+    Call<ProjectResponse> delete_project(@Field("id") int id);
+
     @POST("projects/create")
     @FormUrlEncoded
     Call<ProjectResponse> save_project(@Field("name") String name, @Field("website") String website, @Field("client") String client,
