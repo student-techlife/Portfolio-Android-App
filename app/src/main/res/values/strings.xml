@@ -78,8 +78,17 @@
     <!-- Buttons -->
     <string name="btn_cancel">Annuleer</string>
     <string name="btn_logout">Uitloggen</string>
+    <string name="btn_change_project">Project wijzigen</string>
+    <string name="btn_remove_project">Project verwijderen</string>
 
     <!-- Project show page -->
     <string name="project_hours">Aantal uur aan gewerkt</string>
     <string name="project_oplevering">Datum van oplevering</string>
+
+    <!-- Empty strings -->
+    <string name="unkown">Onbekend</string>
+    <string name="no_project_date">Geen opleverdatum</string>
+    <string name="no_project_website">Geen website</string>
+    <string name="no_project_client">Geen opdrachtgever</string>
+    <string name="no_project_desc">Geen project beschrijving</string>
 </resources>
