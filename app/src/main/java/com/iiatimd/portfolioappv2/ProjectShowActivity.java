@@ -3,8 +3,10 @@ package com.iiatimd.portfolioappv2;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +29,12 @@ import retrofit2.Response;
 
 public class ProjectShowActivity extends AppCompatActivity {
 
-    private int id, aantalUur, position;
+    private int id,aantalUur,position,projectUserId;
     private String photo,projectName,website,client,desc;
     private TextView txtAantalUur,txtOplevering,txtProjectName,txtWebsite,txtClient,txtDesc;
-    private Button removeProject;
+    private Button removeProject,changeProject;
     private ImageView projectImage;
+    private SharedPreferences preferences;
 
     ApiService service;
     TokenManager tokenManager;
@@ -52,6 +55,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         client = intent.getStringExtra("client");
         desc = intent.getStringExtra("desc");
         position = intent.getIntExtra("position", 0);
+        projectUserId = intent.getIntExtra("projectUserId", 0);
 
         // Load views by ID's
         projectImage = findViewById(R.id.imgShowProjectImage);
@@ -61,11 +65,13 @@ public class ProjectShowActivity extends AppCompatActivity {
         txtWebsite = findViewById(R.id.txtShowWebsite);
         txtClient = findViewById(R.id.txtShowOpdrachtgever);
         txtDesc = findViewById(R.id.txtShowDesc);
+        changeProject = findViewById(R.id.btnEditProject);
         removeProject = findViewById(R.id.btnRemoveProject);
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
+        preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         init();
     }
 
@@ -79,6 +85,16 @@ public class ProjectShowActivity extends AppCompatActivity {
         txtWebsite.setText(website);
         txtClient.setText(client);
         txtDesc.setText(desc);
+
+        // Pas zichtbaarheid aan van de knoppen, zodat alleen de eigenaar dingen kan aanpassen
+        // Project user ID == account ID
+        if (projectUserId == preferences.getInt("id",0)) {
+            removeProject.setVisibility(View.VISIBLE);
+            changeProject.setVisibility(View.VISIBLE);
+        } else {
+            removeProject.setVisibility(View.GONE);
+            changeProject.setVisibility(View.GONE);
+        }
 
         // Verwijder het project
         removeProject.setOnClickListener(v->{

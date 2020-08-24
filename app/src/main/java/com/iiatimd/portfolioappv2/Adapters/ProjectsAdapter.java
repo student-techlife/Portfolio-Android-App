@@ -93,6 +93,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             // Maak variables
             int id = project.getId();
             int aantalUur = project.getAantalUur();
+            int projectUserId = project.getUser().getId();
             String projectName = project.getProjectName();
             String website = project.getWebsite();
             String client = project.getOpdrachtgever();
@@ -109,6 +110,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             intent.putExtra("desc", desc);
             intent.putExtra("photo", photo);
             intent.putExtra("position", position);
+            intent.putExtra("projectUserId", projectUserId);
             v.getContext().startActivity(intent);
         });
 
