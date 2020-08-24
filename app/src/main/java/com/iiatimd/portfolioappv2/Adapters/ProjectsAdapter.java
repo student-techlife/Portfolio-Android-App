@@ -1,7 +1,9 @@
 package com.iiatimd.portfolioappv2.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,15 +22,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.HomeActivity;
+import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
+import com.iiatimd.portfolioappv2.HomeActivity;
+import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.ProjectShowActivity;
 import com.iiatimd.portfolioappv2.R;
+import com.iiatimd.portfolioappv2.TokenManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ProjectsHolder> {
 
@@ -38,6 +47,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private SharedPreferences preferences;
 
     private static final String TAG = "ProjectsAdapter";
+
+    ApiService service;
+    Call<ProjectResponse> deleteProject;
 
     public ProjectsAdapter(Context context, ArrayList<Project> list) {
         this.context = context;
@@ -50,6 +62,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public ProjectsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_project,parent,false);
+
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
         return new ProjectsHolder(view);
     }
 
@@ -79,6 +93,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             // Maak variables
             int id = project.getId();
             int aantalUur = project.getAantalUur();
+            int projectUserId = project.getUser().getId();
             String projectName = project.getProjectName();
             String website = project.getWebsite();
             String client = project.getOpdrachtgever();
@@ -94,6 +109,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             intent.putExtra("aantalUur", aantalUur);
             intent.putExtra("desc", desc);
             intent.putExtra("photo", photo);
+            intent.putExtra("position", position);
+            intent.putExtra("projectUserId", projectUserId);
             v.getContext().startActivity(intent);
         });
 
@@ -107,14 +124,51 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 //                            return true;
                     }
                     case R.id.item_delete: {
-//                            deleteProject(project.getId(),position);
-//                            return true;
+                        deleteProject(project.getId(),position);
+                        return true;
                     }
                 }
                 return false;
             });
             popupMenu.show();
         });
+    }
+
+    // Verwijder een project
+    private void deleteProject(int projectId, int position) {
+//        Log.w(TAG, "onClick: Je wil verwijderen!");
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Weet je het zeker?");
+        builder.setMessage("Wanneer je bevestigd is er geen weg meer terug en wordt je project verwijderd.");
+        builder.setPositiveButton("Verwijder", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteProject = service.delete_project(projectId);
+                deleteProject.enqueue(new Callback<ProjectResponse>() {
+                    @Override
+                    public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
+                        list.remove(position);
+                        notifyItemRemoved(position);
+                        notifyDataSetChanged();
+                        listAll.clear();
+                        listAll.addAll(list);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProjectResponse> call, Throwable t) {
+                        Log.w(TAG, "onFailure: " + t.getMessage() );
+                    }
+                });
+
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
     }
 
     @Override

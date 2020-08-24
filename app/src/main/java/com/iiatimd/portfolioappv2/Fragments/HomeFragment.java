@@ -103,10 +103,10 @@ public class HomeFragment extends Fragment {
                 for (int i = 0; i < response.body().getProjects().toArray().length; i++) {
 
                     User user = new User();
-                    user.setId(sharedPreferences.getInt("id", 0));
-                    user.setName(sharedPreferences.getString("name", ""));
-                    user.setLastname(sharedPreferences.getString("lastname", ""));
-                    user.setPhoto(sharedPreferences.getString("photo", ""));
+                    user.setId(response.body().getProjects().get(i).getUser().getId());
+                    user.setName(response.body().getProjects().get(i).getUser().getName());
+                    user.setLastname(response.body().getProjects().get(i).getUser().getLastname());
+                    user.setPhoto(response.body().getProjects().get(i).getUser().getPhoto());
 
                     Project project = new Project();
                     project.setUser(user);
