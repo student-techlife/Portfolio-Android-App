@@ -187,6 +187,12 @@ public class AddProjectActivity extends AppCompatActivity {
         finish();
     }
 
+    // Remove photo
+    public void deletePhoto(View view) {
+        imgProject.setImageResource(0);
+        bitmap = null;
+    }
+
     // Change photo action
     public void changePhoto(View view) {
         Intent intent = new Intent();
@@ -202,7 +208,7 @@ public class AddProjectActivity extends AppCompatActivity {
             byte[] imgByte = byteArrayOutputStream.toByteArray();
             return Base64.encodeToString(imgByte,Base64.DEFAULT);
         }
-        return "";
+        return "empty";
     }
 
     // Change photo in view
