@@ -108,6 +108,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             intent.putExtra("aantalUur", aantalUur);
             intent.putExtra("desc", desc);
             intent.putExtra("photo", photo);
+            intent.putExtra("position", position);
             v.getContext().startActivity(intent);
         });
 

@@ -1,23 +1,41 @@
 package com.iiatimd.portfolioappv2;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.iiatimd.portfolioappv2.Adapters.ProjectsAdapter;
+import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
+import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
+import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ProjectShowActivity extends AppCompatActivity {
 
-    private int id, aantalUur;
+    private int id, aantalUur, position;
     private String photo,projectName,website,client,desc;
     private TextView txtAantalUur,txtOplevering,txtProjectName,txtWebsite,txtClient,txtDesc;
+    private Button removeProject;
     private ImageView projectImage;
+
+    ApiService service;
+    TokenManager tokenManager;
+    Call<ProjectResponse> deleteProject;
 
     private static final String TAG = "ProjectShowActivity";
 
@@ -33,6 +51,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         website = intent.getStringExtra("website");
         client = intent.getStringExtra("client");
         desc = intent.getStringExtra("desc");
+        position = intent.getIntExtra("position", 0);
 
         // Load views by ID's
         projectImage = findViewById(R.id.imgShowProjectImage);
@@ -42,6 +61,10 @@ public class ProjectShowActivity extends AppCompatActivity {
         txtWebsite = findViewById(R.id.txtShowWebsite);
         txtClient = findViewById(R.id.txtShowOpdrachtgever);
         txtDesc = findViewById(R.id.txtShowDesc);
+        removeProject = findViewById(R.id.btnRemoveProject);
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
         init();
     }
@@ -56,6 +79,45 @@ public class ProjectShowActivity extends AppCompatActivity {
         txtWebsite.setText(website);
         txtClient.setText(client);
         txtDesc.setText(desc);
+
+        // Verwijder het project
+        removeProject.setOnClickListener(v->{
+            AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
+            builder.setTitle("Weet je het zeker?");
+            builder.setMessage("Wanneer je bevestigd is er geen weg meer terug en wordt je project verwijderd.");
+            builder.setPositiveButton("Verwijder", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+//                    Log.w(TAG, "onClick: Je wil verwijderen!");
+
+                    // Maak een delete call naar backend API
+                    deleteProject = service.delete_project(id);
+                    deleteProject.enqueue(new Callback<ProjectResponse>() {
+                        @Override
+                        public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
+                            // Verwijder project van arraylisy
+                            HomeFragment.arrayList.remove(position);
+                            Objects.requireNonNull(HomeFragment.recyclerViewHome.getAdapter()).notifyItemRemoved(position);
+                            HomeFragment.recyclerViewHome.getAdapter().notifyDataSetChanged();
+                            // Sluit activity af
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ProjectResponse> call, Throwable t) {
+                            Log.w(TAG, "onFailure: " + t.getMessage() );
+                        }
+                    });
+                }
+            });
+            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            builder.show();
+        });
     }
 
 
