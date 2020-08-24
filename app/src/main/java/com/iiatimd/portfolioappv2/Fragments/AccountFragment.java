@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.iiatimd.portfolioappv2.EditUserActivity;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.Entities.ProjectCall;
@@ -32,6 +33,7 @@ import com.iiatimd.portfolioappv2.LoginActivity;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.R;
+import com.iiatimd.portfolioappv2.UserInfoActivity;
 import com.iiatimd.portfolioappv2.UserManager;
 import com.squareup.picasso.Picasso;
 
@@ -89,6 +91,11 @@ public class AccountFragment extends Fragment {
         txtProjectsCount = view.findViewById(R.id.txtAccountProjectCount);
         recyclerViewAccount = view.findViewById(R.id.recyclerAccount);
         btnEditAccount = view.findViewById(R.id.btnEditAccount);
+        btnEditAccount.setOnClickListener(v->{
+            Intent i = new Intent(((HomeActivity)getContext()), EditUserActivity.class);
+            i.putExtra("imgUrl",imgUrl);
+            startActivity(i);
+        });
         recyclerViewAccount.setHasFixedSize(true);
         recyclerViewAccount.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
