@@ -110,13 +110,13 @@ public class AddProjectActivity extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        // Image
-        imgProject.setImageURI(getIntent().getData());
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),getIntent().getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        // Image
+//        imgProject.setImageURI(getIntent().getData());
+//        try {
+//            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),getIntent().getData());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // Check en start save functie
         // TODO misschien validation in aparte functie
@@ -189,9 +189,9 @@ public class AddProjectActivity extends AppCompatActivity {
 
     // Change photo action
     public void changePhoto(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
+        Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
         startActivityForResult(intent, GALLERY_CHANGE_PROJECT);
     }
 

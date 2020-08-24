@@ -74,9 +74,10 @@ public class HomeActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(v->{
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, GALLERY_ADD_PROJECT);
+//            Intent intent = new Intent(Intent.ACTION_PICK);
+//            intent.setType("image/*");
+//            startActivityForResult(intent, GALLERY_ADD_PROJECT);
+            startActivity(new Intent(HomeActivity.this, AddProjectActivity.class));
 
             // TODO Misschien dit toch weglaten?
 //            setContentView(R.layout.activity_add_project);
