@@ -31,10 +31,10 @@ import retrofit2.Response;
 
 public class EditUserActivity extends AppCompatActivity {
 
-    private TextInputLayout layoutName,layoutLastname;
-    private TextInputEditText txtName,txtLastname;
+    private TextInputLayout layoutName,layoutLastname,layoutEmail;
+    private TextInputEditText txtName,txtLastname,txtEmail;
     private TextView txtSelectPhoto;
-    private Button btnContinue;
+    private Button btnSave;
     private CircleImageView circleImageView;
     private static final int GALLERY_ADD_PROFILE = 1;
     private Bitmap bitmap = null;
@@ -51,32 +51,29 @@ public class EditUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_edit_profile);
-
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
-        // Service waarbij access token automatisch wordt meegegeven
         protectedService = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
-
         init();
     }
 
     private void init() {
         layoutLastname = findViewById(R.id.txtLayoutLastnameameUserInfo);
         layoutName = findViewById(R.id.txtLayoutNameUserInfo);
+        layoutEmail = findViewById(R.id.txtLayoutEmail);
+        txtEmail = findViewById(R.id.txtEmail);
         txtName = findViewById(R.id.txtNameUserInfo);
         txtLastname = findViewById(R.id.txtLastnameUserInfo);
-        btnContinue = findViewById(R.id.btnContinue);
+        btnSave = findViewById(R.id.btnSave);
         txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
 
-        // Validate en start save functie
-        btnContinue.setOnClickListener(v->{
+        btnSave.setOnClickListener(v->{
             if (validate()) {
                 saveUserInfo();
             }
         });
 
-        // Kies profielfoto van gallery
         txtSelectPhoto.setOnClickListener(v->{
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
@@ -87,9 +84,10 @@ public class EditUserActivity extends AppCompatActivity {
     private void saveUserInfo() {
         String name = txtName.getText().toString();
         String lastname = txtLastname.getText().toString();
+        String email = txtEmail.getText().toString();
         String photo = convertToString(bitmap);
 
-        call = protectedService.save_user_info(name, lastname, photo);
+        call = protectedService.edit_user_info(name, lastname, email, photo);
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {

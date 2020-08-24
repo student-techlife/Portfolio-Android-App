@@ -33,6 +33,10 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> save_user_info(@Field("name") String name, @Field("lastname") String lastname, @Field("photo") String photo);
 
+    @POST("edit_user_info")
+    @FormUrlEncoded
+    Call<AccessToken> edit_user_info(@Field("name") String name, @Field("lastname") String lastname, @Field("email") String email, @Field("photo") String photo);
+
     @GET("projects")
     Call<ProjectCall> projects();
 
