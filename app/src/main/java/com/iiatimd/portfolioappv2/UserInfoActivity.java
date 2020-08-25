@@ -3,9 +3,7 @@ package com.iiatimd.portfolioappv2;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -65,7 +63,7 @@ public class UserInfoActivity extends AppCompatActivity {
         layoutName = findViewById(R.id.txtLayoutNameUserInfo);
         txtName = findViewById(R.id.txtNameUserInfo);
         txtLastname = findViewById(R.id.txtLastnameUserInfo);
-        btnContinue = findViewById(R.id.btnContinue);
+        btnContinue = findViewById(R.id.btnSave);
         txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
 

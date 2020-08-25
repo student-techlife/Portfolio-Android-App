@@ -38,6 +38,8 @@ public class EditUserActivity extends AppCompatActivity {
     private CircleImageView circleImageView;
     private static final int GALLERY_ADD_PROFILE = 1;
     private Bitmap bitmap = null;
+    private SharedPreferences preferences;
+
 
     private static final String TAG = "EditUserActivity";
 
@@ -67,6 +69,11 @@ public class EditUserActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
+        preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+
+        txtName.setText(preferences.getString("name", null));
+        txtEmail.setText(preferences.getString("email", null));
+        txtLastname.setText(preferences.getString("lastname", null));
 
         btnSave.setOnClickListener(v->{
             if (validate()) {
@@ -131,6 +138,11 @@ public class EditUserActivity extends AppCompatActivity {
         if (txtLastname.getText().toString().isEmpty()) {
             layoutLastname.setErrorEnabled(true);
             layoutLastname.setError("Achternaam is verplicht");
+            return false;
+        }
+        if (txtEmail.getText().toString().isEmpty()) {
+            layoutEmail.setErrorEnabled(true);
+            layoutEmail.setError("Email is verplicht");
             return false;
         }
 
