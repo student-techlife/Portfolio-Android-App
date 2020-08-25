@@ -67,15 +67,16 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/colorBlack"
-                android:text="0"
-                android:layout_marginBottom="8dp"
                 android:id="@+id/txtAccountProjectCount"
-                android:layout_height="wrap_content"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/aantal_projecten"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/txtProjecten"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/projecten"

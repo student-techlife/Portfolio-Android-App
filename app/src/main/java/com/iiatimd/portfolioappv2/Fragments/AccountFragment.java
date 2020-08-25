@@ -1,5 +1,6 @@
 package com.iiatimd.portfolioappv2.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +38,7 @@ import com.iiatimd.portfolioappv2.UserInfoActivity;
 import com.iiatimd.portfolioappv2.UserManager;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -53,10 +55,8 @@ import retrofit2.Response;
 public class AccountFragment extends Fragment {
 
     private View view;
-    private MaterialToolbar toolbar;
     private CircleImageView imgProfile;
-    private TextView txtName,txtProjectsCount;
-    private Button btnEditAccount;
+    private TextView txtName,txtProjectsCount,txtProject;
     private RecyclerView recyclerViewAccount;
     private ArrayList<Project> arrayList;
     private SharedPreferences preferences;
@@ -74,25 +74,27 @@ public class AccountFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        assert inflater != null;
         view = inflater.inflate(R.layout.layout_account, container, false);
 
-        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)getContext()).getToken());
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity) Objects.requireNonNull(getContext())).getToken());
         init();
         return view;
     }
 
     private void init() {
-        preferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        toolbar = view.findViewById(R.id.toolbarAccount);
+        preferences = Objects.requireNonNull(getContext()).getSharedPreferences("user", Context.MODE_PRIVATE);
+        MaterialToolbar toolbar = view.findViewById(R.id.toolbarAccount);
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         imgProfile = view.findViewById(R.id.imgAccountProfile);
         txtName = view.findViewById(R.id.txtAccountName);
         txtProjectsCount = view.findViewById(R.id.txtAccountProjectCount);
+        txtProject = view.findViewById(R.id.txtProjecten);
         recyclerViewAccount = view.findViewById(R.id.recyclerAccount);
-        btnEditAccount = view.findViewById(R.id.btnEditAccount);
+        Button btnEditAccount = view.findViewById(R.id.btnEditAccount);
         btnEditAccount.setOnClickListener(v->{
-            Intent i = new Intent(((HomeActivity)getContext()), EditUserActivity.class);
+            Intent i = new Intent(getContext(), EditUserActivity.class);
             i.putExtra("imgUrl",imgUrl);
             startActivity(i);
         });
@@ -100,6 +102,7 @@ public class AccountFragment extends Fragment {
         recyclerViewAccount.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 
+    @SuppressLint("SetTextI18n")
     private void getData() {
         arrayList = new ArrayList<>();
 
@@ -111,11 +114,16 @@ public class AccountFragment extends Fragment {
         callProject = service.myProjects();
         callProject.enqueue(new Callback<ProjectCall>() {
             @Override
-            public void onResponse(Call<ProjectCall> call, Response<ProjectCall> response) {
+            public void onResponse(@NotNull Call<ProjectCall> call, @NotNull Response<ProjectCall> response) {
                 Log.w(TAG, "onResponse: " + response);
-
+                assert response.body() != null;
+                if(response.body().getProjects().toArray().length <= 1) {
+                    txtProject.setText("Project");
+                } else {
+                    txtProject.setText("Projecten");
+                }
+                assert response.body() != null;
                 for (int i = 0; i < response.body().getProjects().toArray().length; i++) {
-
                     User user = new User();
                     user.setId(preferences.getInt("id", 0));
                     user.setName(preferences.getString("name", ""));
@@ -129,16 +137,15 @@ public class AccountFragment extends Fragment {
 
                     arrayList.add(project);
                 }
-                // Save data?
+                // Save data
                 txtProjectsCount.setText(arrayList.size()+"");
             }
 
             @Override
-            public void onFailure(Call<ProjectCall> call, Throwable t) {
+            public void onFailure(@NotNull Call<ProjectCall> call, @NotNull Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
-
 
         // Set project counter
         txtProjectsCount.setText(HomeFragment.arrayList.size()+"");
@@ -162,18 +169,8 @@ public class AccountFragment extends Fragment {
         if (item.getItemId() == R.id.item_logout) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage(R.string.warn_logout);
-            builder.setPositiveButton(R.string.btn_logout, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ((HomeActivity)getActivity()).logout();
-                }
-            });
-            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
+            builder.setPositiveButton(R.string.btn_logout, (dialog, which) -> ((HomeActivity) Objects.requireNonNull(getActivity())).logout());
+            builder.setNegativeButton(R.string.btn_cancel, (dialog, which) -> {});
             builder.show();
         }
 

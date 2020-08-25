@@ -2,8 +2,11 @@ package com.iiatimd.portfolioappv2;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -40,6 +44,7 @@ public class EditUserActivity extends AppCompatActivity {
     private CircleImageView circleImageView;
     private static final int GALLERY_ADD_PROFILE = 1;
     private Bitmap bitmap = null;
+    Boolean setReturn = false;
     private static final String TAG = "EditUserActivity";
 
     ApiService protectedService;
@@ -105,17 +110,24 @@ public class EditUserActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call<AccessToken> call, @NotNull Response<AccessToken> response) {
                 if (response.isSuccessful()) {
                     user();
-                    finish();
+                    alert();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<AccessToken> call, @NotNull Throwable t) {
-
+                reponseError();
             }
         });
     }
 
+    public void alert() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Je gegevens zijn aangepast");
+        alertDialogBuilder.setPositiveButton("OK", (arg0, arg1) -> finish());
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     void user() {
         userCall = protectedService.user();
         userCall.enqueue(new Callback<User>() {
@@ -132,6 +144,11 @@ public class EditUserActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void reponseError() {
+        layoutEmail.setErrorEnabled(true);
+        layoutEmail.setError("Email is verbonden aan een ander account");
     }
 
     private boolean validate() {

@@ -15,9 +15,10 @@
     <string name="voornaam">Voornaam</string>
     <string name="achternaam">Achternaam</string>
     <string name="projecten">Projecten</string>
+    <string name="project">Project</string>
     <string name="select_photo">Foto selecteren</string>
     <string name="change_photo">Foto wijzigen</string>
-    <string name="change_account">Account wijzigen</string>
+    <string name="change_account">Informatie wijzigen</string>
     <string name="user_info">Gebruikers Info</string>
     <string name="change_info">Informatie wijzigen</string>
 
@@ -30,6 +31,7 @@
     <string name="al_account_hebben">Heb je al een account?</string>
 
     <!-- Nieuw project toevoegen -->
+    <string name="aantal_projecten">0</string>
     <string name="new_project">Nieuw project</string>
     <string name="save_project">Project opslaan</string>
     <string name="project_name">Project naam</string>
