@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private BottomNavigationView navigationView;
-    private static final int GALLERY_ADD_PROJECT = 2;
+//    private static final int GALLERY_ADD_PROJECT = 2;
 //    private SharedPreferences userPref;
 
     private static final String TAG = "HomeActivity";
@@ -74,9 +74,10 @@ public class HomeActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(v->{
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, GALLERY_ADD_PROJECT);
+//            Intent intent = new Intent(Intent.ACTION_PICK);
+//            intent.setType("image/*");
+//            startActivityForResult(intent, GALLERY_ADD_PROJECT);
+            startActivity(new Intent(HomeActivity.this, AddProjectActivity.class));
 
             // TODO Misschien dit toch weglaten?
 //            setContentView(R.layout.activity_add_project);
@@ -97,7 +98,6 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(AccountFragment.class.getSimpleName())).commit();
                             // Show Home fragment
                             fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag(HomeFragment.class.getSimpleName())).commit();
-//                            getProjects();
                         }
                         break;
                     }
@@ -159,14 +159,14 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_ADD_PROJECT && resultCode == RESULT_OK) {
-            Uri imgUri = data.getData();
-            Intent intent = new Intent(HomeActivity.this, AddProjectActivity.class);
-            intent.setData(imgUri);
-            startActivity(intent);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == GALLERY_ADD_PROJECT && resultCode == RESULT_OK) {
+//            Uri imgUri = data.getData();
+//            Intent intent = new Intent(HomeActivity.this, AddProjectActivity.class);
+//            intent.setData(imgUri);
+//            startActivity(intent);
+//        }
+//    }
 }
