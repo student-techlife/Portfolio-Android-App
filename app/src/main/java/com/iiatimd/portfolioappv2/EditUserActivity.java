@@ -105,7 +105,6 @@ public class EditUserActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call<AccessToken> call, @NotNull Response<AccessToken> response) {
                 if (response.isSuccessful()) {
                     user();
-                    startActivity(new Intent(EditUserActivity.this, HomeActivity.class));
                     finish();
                 }
             }
