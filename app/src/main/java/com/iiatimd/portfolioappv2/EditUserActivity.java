@@ -21,8 +21,11 @@ import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -33,14 +36,9 @@ public class EditUserActivity extends AppCompatActivity {
 
     private TextInputLayout layoutName,layoutLastname,layoutEmail;
     private TextInputEditText txtName,txtLastname,txtEmail;
-    private TextView txtSelectPhoto;
-    private Button btnSave;
     private CircleImageView circleImageView;
     private static final int GALLERY_ADD_PROFILE = 1;
     private Bitmap bitmap = null;
-    private SharedPreferences preferences;
-
-
     private static final String TAG = "EditUserActivity";
 
     ApiService protectedService;
@@ -60,17 +58,19 @@ public class EditUserActivity extends AppCompatActivity {
     }
 
     private void init() {
+        // Getters
         layoutLastname = findViewById(R.id.txtLayoutLastnameameUserInfo);
         layoutName = findViewById(R.id.txtLayoutNameUserInfo);
         layoutEmail = findViewById(R.id.txtLayoutEmail);
         txtEmail = findViewById(R.id.txtEmail);
         txtName = findViewById(R.id.txtNameUserInfo);
         txtLastname = findViewById(R.id.txtLastnameUserInfo);
-        btnSave = findViewById(R.id.btnSave);
-        txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
+        Button btnSave = findViewById(R.id.btnSave);
+        TextView txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
-        preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
 
+        // Setters
         txtName.setText(preferences.getString("name", null));
         txtEmail.setText(preferences.getString("email", null));
         txtLastname.setText(preferences.getString("lastname", null));
@@ -89,24 +89,24 @@ public class EditUserActivity extends AppCompatActivity {
     }
 
     private void saveUserInfo() {
-        String name = txtName.getText().toString();
-        String lastname = txtLastname.getText().toString();
-        String email = txtEmail.getText().toString();
+        String name = Objects.requireNonNull(txtName.getText()).toString();
+        String lastname = Objects.requireNonNull(txtLastname.getText()).toString();
+        String email = Objects.requireNonNull(txtEmail.getText()).toString();
         String photo = convertToString(bitmap);
 
         call = protectedService.edit_user_info(name, lastname, email, photo);
         call.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+            public void onResponse(@NotNull Call<AccessToken> call, @NotNull Response<AccessToken> response) {
                 if (response.isSuccessful()) {
                     user();
-//                    startActivity(new Intent(EditUserActivity.this, HomeActivity.class));1
+                    startActivity(new Intent(EditUserActivity.this, HomeActivity.class));
                     finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<AccessToken> call, Throwable t) {
+            public void onFailure(@NotNull Call<AccessToken> call, @NotNull Throwable t) {
 
             }
         });
@@ -116,31 +116,32 @@ public class EditUserActivity extends AppCompatActivity {
         userCall = protectedService.user();
         userCall.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NotNull Call<User> call, @NotNull Response<User> response) {
                 if (response.isSuccessful()) {
+                    assert response.body() != null;
                     userManager.saveUser(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NotNull Call<User> call, @NotNull Throwable t) {
 
             }
         });
     }
 
     private boolean validate() {
-        if (txtName.getText().toString().isEmpty()) {
+        if (Objects.requireNonNull(txtName.getText()).toString().isEmpty()) {
             layoutName.setErrorEnabled(true);
             layoutName.setError("Naam is verplicht");
             return false;
         }
-        if (txtLastname.getText().toString().isEmpty()) {
+        if (Objects.requireNonNull(txtLastname.getText()).toString().isEmpty()) {
             layoutLastname.setErrorEnabled(true);
             layoutLastname.setError("Achternaam is verplicht");
             return false;
         }
-        if (txtEmail.getText().toString().isEmpty()) {
+        if (Objects.requireNonNull(txtEmail.getText()).toString().isEmpty()) {
             layoutEmail.setErrorEnabled(true);
             layoutEmail.setError("Email is verplicht");
             return false;
@@ -166,6 +167,7 @@ public class EditUserActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_ADD_PROFILE && resultCode == RESULT_OK) {
+            assert data != null;
             Uri imgUri = data.getData();
             circleImageView.setImageURI(imgUri);
 
