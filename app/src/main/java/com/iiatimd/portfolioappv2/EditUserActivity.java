@@ -20,6 +20,7 @@ import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,11 +70,15 @@ public class EditUserActivity extends AppCompatActivity {
         TextView txtSelectPhoto = findViewById(R.id.txtSelectPhoto);
         circleImageView = findViewById(R.id.imgUserInfo);
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String photo = preferences.getString("photo", "");
 
         // Setters
         txtName.setText(preferences.getString("name", null));
         txtEmail.setText(preferences.getString("email", null));
         txtLastname.setText(preferences.getString("lastname", null));
+        if (photo != null) {
+            Picasso.get().load(RetrofitBuilder.URL + "profiles/" + photo).into(circleImageView);
+        }
 
         btnSave.setOnClickListener(v->{
             if (validate()) {
