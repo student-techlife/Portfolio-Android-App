@@ -117,11 +117,14 @@ public class AccountFragment extends Fragment {
             public void onResponse(@NotNull Call<ProjectCall> call, @NotNull Response<ProjectCall> response) {
                 Log.w(TAG, "onResponse: " + response);
                 assert response.body() != null;
-                if(response.body().getProjects().toArray().length <= 1) {
+
+                // Bepaal text bij project counter
+                if(response.body().getProjects().toArray().length == 1) {
                     txtProject.setText("Project");
                 } else {
                     txtProject.setText("Projecten");
                 }
+
                 assert response.body() != null;
                 for (int i = 0; i < response.body().getProjects().toArray().length; i++) {
                     User user = new User();
