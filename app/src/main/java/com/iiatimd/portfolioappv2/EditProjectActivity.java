@@ -38,6 +38,7 @@ public class EditProjectActivity extends AppCompatActivity {
     private ImageView imgProject;
     private int id,aantalUur,position;
     private String photo;
+    private Boolean backToDefault = false;
     private Bitmap bitmap = null;
     private Button saveButton,photoSelect,photoRemove;
     private static final int GALLERY_SELECT_PROJECT = 2;
@@ -107,14 +108,14 @@ public class EditProjectActivity extends AppCompatActivity {
     }
 
     private void selectPhoto() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, GALLERY_SELECT_PROJECT);
     }
 
     private void removePhoto() {
         imgProject.setImageResource(0);
+        backToDefault = true;
         bitmap = null;
     }
 
@@ -148,6 +149,7 @@ public class EditProjectActivity extends AppCompatActivity {
                 Objects.requireNonNull(HomeFragment.recyclerViewHome.getAdapter()).notifyItemChanged(position);
                 HomeFragment.recyclerViewHome.getAdapter().notifyDataSetChanged();
                 Toast.makeText(EditProjectActivity.this, "Project is aangepast", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(EditProjectActivity.this, HomeActivity.class));
                 finish();
             }
 
@@ -159,11 +161,13 @@ public class EditProjectActivity extends AppCompatActivity {
     }
 
     private String convertToString(Bitmap bitmap) {
-        if (bitmap != null) {
+        if (bitmap != null && backToDefault == false) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG,25, byteArrayOutputStream);
             byte[] imgByte = byteArrayOutputStream.toByteArray();
             return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        } if (backToDefault == true) {
+            return "default";
         }
         return "empty";
     }
