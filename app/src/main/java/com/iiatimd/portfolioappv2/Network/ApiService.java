@@ -54,7 +54,7 @@ public interface ApiService {
 
     @POST("projects/create")
     @FormUrlEncoded
-    Call<ProjectResponse> save_project(@Field("name") String name, @Field("website") String website, @Field("client") String client,
+    Call<ProjectResponse> save_project(@Field("name") String name, @Field("website") String website, @Field("client") String client, @Field("completion_date") String completion_date,
                                        @Field("photo") String photo, @Field("hours") String hours, @Field("desc") String desc);
 
     @GET("user")

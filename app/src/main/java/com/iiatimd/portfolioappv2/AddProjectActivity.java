@@ -134,12 +134,12 @@ public class AddProjectActivity extends AppCompatActivity {
         String name         = txtProjectName.getText().toString();
         String website      = txtWebsite.getText().toString();
         String client       = txtOpdrachtgever.getText().toString();
-//        String completion_date = dateProjOplevering.getText().toString();
+        String completion_date = dateProjOplevering.getText().toString();
         String hours        = txtNumAantalUur.getText().toString();
         String photo        = convertToString(bitmap);
         String description  = txtDescProject.getText().toString();
 
-        call = protectedService.save_project(name,website,client,photo,hours,description);
+        call = protectedService.save_project(name,website,client,completion_date,photo,hours,description);
         call.enqueue(new Callback<ProjectResponse>() {
             @Override
             public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
@@ -162,6 +162,7 @@ public class AddProjectActivity extends AppCompatActivity {
                 project.setOpdrachtgever(response.body().getData().getOpdrachtgever());
                 project.setAantalUur(response.body().getData().getAantalUur());
                 project.setDesc(response.body().getData().getDesc());
+                project.setDatumOplevering(response.body().getData().getDatumOplerving());
 
 //                Log.w(TAG, "onResponse: " + project.getWebsite());
 
