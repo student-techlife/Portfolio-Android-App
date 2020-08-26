@@ -102,7 +102,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             holder.btnProjectOption.setVisibility(View.GONE);
         }
 
-        holder.projectCard.setOnClickListener(v->{
+        holder.imgProject.setOnClickListener(v->{
             Log.w(TAG, "onBindViewHolder: Je hebt op een card geklikt " + project.getId());
 
             // Activity intent - Stuur data door naar Show pagina
