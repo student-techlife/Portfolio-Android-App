@@ -126,10 +126,9 @@ public class EditProjectActivity extends AppCompatActivity {
         // TODO opleverdatum
         String hours    = txtAantalUur.getText().toString();
         String photo    = convertToString(bitmap);
-        String oldPhoto = getIntent().getStringExtra("photo");
         String desc     = txtDesc.getText().toString();
 
-        editProject = service.edit_project(id,name,website,client,photo,oldPhoto,hours,desc);
+        editProject = service.edit_project(id,name,website,client,photo,hours,desc);
         editProject.enqueue(new Callback<ProjectResponse>() {
             @Override
             public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
