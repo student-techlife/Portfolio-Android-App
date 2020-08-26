@@ -82,20 +82,20 @@ public class AddProjectActivity extends AppCompatActivity {
         Button btnProjectSave = findViewById(R.id.btnAddProject);
 
         // Project image view
-        imgProject = findViewById(R.id.imgAddProject);
+        imgProject          = findViewById(R.id.imgAddProject);
 
         // Basic
-        txtProjectName = findViewById(R.id.txtProjectNaam);
-        txtWebsite = findViewById(R.id.txtWebsite);
-        txtOpdrachtgever = findViewById(R.id.txtOpdrachtgever);
-        txtNumAantalUur = findViewById(R.id.txtNumAantalUur);
+        txtProjectName      = findViewById(R.id.txtProjectNaam);
+        txtWebsite          = findViewById(R.id.txtWebsite);
+        txtOpdrachtgever    = findViewById(R.id.txtOpdrachtgever);
+        txtNumAantalUur     = findViewById(R.id.txtNumAantalUur);
 
         // Beschrijving
-        txtDescProject = findViewById(R.id.txtDescProject);
+        txtDescProject      = findViewById(R.id.txtDescProject);
 
         // Date
-        dateProjOplevering = findViewById(R.id.dateProjOplevering);
-        dateTextButton = findViewById(R.id.selectProjectDate);
+        dateProjOplevering  = findViewById(R.id.dateProjOplevering);
+        dateTextButton      = findViewById(R.id.selectProjectDate);
 
         // Datum picker (erg fancy)
         dateTextButton.setOnClickListener(v->{
@@ -131,13 +131,13 @@ public class AddProjectActivity extends AppCompatActivity {
 
     private void saveProject() {
 
-        String name = txtProjectName.getText().toString();
-        String website = txtWebsite.getText().toString();
-        String client = txtOpdrachtgever.getText().toString();
+        String name         = txtProjectName.getText().toString();
+        String website      = txtWebsite.getText().toString();
+        String client       = txtOpdrachtgever.getText().toString();
 //        String completion_date = dateProjOplevering.getText().toString();
-        String hours = txtNumAantalUur.getText().toString();
-        String photo = convertToString(bitmap);
-        String description = txtDescProject.getText().toString();
+        String hours        = txtNumAantalUur.getText().toString();
+        String photo        = convertToString(bitmap);
+        String description  = txtDescProject.getText().toString();
 
         call = protectedService.save_project(name,website,client,photo,hours,description);
         call.enqueue(new Callback<ProjectResponse>() {

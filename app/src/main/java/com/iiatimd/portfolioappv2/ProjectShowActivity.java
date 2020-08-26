@@ -47,26 +47,26 @@ public class ProjectShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_show);
         Intent intent=getIntent();
-        id = intent.getIntExtra("id", 0);
-        photo = intent.getStringExtra("photo");
-        aantalUur = intent.getIntExtra("aantalUur", 0);
-        projectName = intent.getStringExtra("projectName");
-        website = intent.getStringExtra("website");
-        client = intent.getStringExtra("client");
-        desc = intent.getStringExtra("desc");
-        position = intent.getIntExtra("position", 0);
-        projectUserId = intent.getIntExtra("projectUserId", 0);
+        id              = intent.getIntExtra("id", 0);
+        photo           = intent.getStringExtra("photo");
+        aantalUur       = intent.getIntExtra("aantalUur", 0);
+        projectName     = intent.getStringExtra("projectName");
+        website         = intent.getStringExtra("website");
+        client          = intent.getStringExtra("client");
+        desc            = intent.getStringExtra("desc");
+        position        = intent.getIntExtra("position", 0);
+        projectUserId   = intent.getIntExtra("projectUserId", 0);
 
         // Load views by ID's
-        projectImage = findViewById(R.id.imgShowProjectImage);
-        txtAantalUur = findViewById(R.id.txtShowAantalUur);
-        txtOplevering = findViewById(R.id.txtShowOplevering);
-        txtProjectName = findViewById(R.id.txtProjectTitle);
-        txtWebsite = findViewById(R.id.txtShowWebsite);
-        txtClient = findViewById(R.id.txtShowOpdrachtgever);
-        txtDesc = findViewById(R.id.txtShowDesc);
-        changeProject = findViewById(R.id.btnEditProject);
-        removeProject = findViewById(R.id.btnRemoveProject);
+        projectImage    = findViewById(R.id.imgShowProjectImage);
+        txtAantalUur    = findViewById(R.id.txtShowAantalUur);
+        txtOplevering   = findViewById(R.id.txtShowOplevering);
+        txtProjectName  = findViewById(R.id.txtProjectTitle);
+        txtWebsite      = findViewById(R.id.txtShowWebsite);
+        txtClient       = findViewById(R.id.txtShowOpdrachtgever);
+        txtDesc         = findViewById(R.id.txtShowDesc);
+        changeProject   = findViewById(R.id.btnEditProject);
+        removeProject   = findViewById(R.id.btnRemoveProject);
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
