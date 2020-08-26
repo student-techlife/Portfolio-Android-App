@@ -96,6 +96,20 @@ public class ProjectShowActivity extends AppCompatActivity {
             changeProject.setVisibility(View.GONE);
         }
 
+        // Wanneer je product wilt gaan aanpassen
+        changeProject.setOnClickListener(v->{
+            Intent intent = new Intent(getApplicationContext(), EditProjectActivity.class);
+            intent.putExtra("id", id);
+            intent.putExtra("projectName", projectName);
+            intent.putExtra("website", website);
+            intent.putExtra("client", client);
+            intent.putExtra("aantalUur", aantalUur);
+            intent.putExtra("desc", desc);
+            intent.putExtra("photo", photo);
+            intent.putExtra("position", position);
+            startActivity(intent);
+        });
+
         // Verwijder het project
         removeProject.setOnClickListener(v->{
             AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
