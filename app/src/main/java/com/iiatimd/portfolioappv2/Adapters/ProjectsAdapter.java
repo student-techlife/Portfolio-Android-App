@@ -32,6 +32,7 @@ import com.iiatimd.portfolioappv2.R;
 import com.iiatimd.portfolioappv2.TokenManager;
 import com.squareup.picasso.Picasso;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -64,8 +65,21 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public ProjectsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_project,parent,false);
 
-        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
+        if (isInternetAvailable() == true) {
+            service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
+        }
+
         return new ProjectsHolder(view);
+    }
+
+    // Check of device is verbonden met internet
+    private boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
