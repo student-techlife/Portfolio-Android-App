@@ -148,7 +148,7 @@ public class AccountFragment extends Fragment {
         });
 
         // Set project counter
-        txtProjectsCount.setText(HomeFragment.arrayList.size()+"");
+//        txtProjectsCount.setText(HomeFragment.arrayList.size()+"");
     }
 
     @Override
