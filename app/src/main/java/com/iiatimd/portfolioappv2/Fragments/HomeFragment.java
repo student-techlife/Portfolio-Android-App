@@ -189,10 +189,4 @@ public class HomeFragment extends Fragment {
 
         super.onHiddenChanged(hidden);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getProjects();
-    }
 }
