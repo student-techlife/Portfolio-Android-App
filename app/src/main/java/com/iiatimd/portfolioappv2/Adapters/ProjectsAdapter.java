@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.iiatimd.portfolioappv2.EditProjectActivity;
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.HomeActivity;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
@@ -31,6 +32,7 @@ import com.iiatimd.portfolioappv2.R;
 import com.iiatimd.portfolioappv2.TokenManager;
 import com.squareup.picasso.Picasso;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -63,8 +65,21 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public ProjectsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_project,parent,false);
 
-        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
+        if (isInternetAvailable() == true) {
+            service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
+        }
+
         return new ProjectsHolder(view);
+    }
+
+    // Check of device is verbonden met internet
+    private boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -90,27 +105,17 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         holder.projectCard.setOnClickListener(v->{
             Log.w(TAG, "onBindViewHolder: Je hebt op een card geklikt " + project.getId());
 
-            // Maak variables
-            int id = project.getId();
-            int aantalUur = project.getAantalUur();
-            int projectUserId = project.getUser().getId();
-            String projectName = project.getProjectName();
-            String website = project.getWebsite();
-            String client = project.getOpdrachtgever();
-            String desc = project.getDesc();
-            String photo = project.getPhoto();
-
-            // Activity intent
+            // Activity intent - Stuur data door naar Show pagina
             Intent intent = new Intent(v.getContext(),ProjectShowActivity.class);
-            intent.putExtra("id", id);
-            intent.putExtra("projectName", projectName);
-            intent.putExtra("website", website);
-            intent.putExtra("client", client);
-            intent.putExtra("aantalUur", aantalUur);
-            intent.putExtra("desc", desc);
-            intent.putExtra("photo", photo);
+            intent.putExtra("id", project.getId());
+            intent.putExtra("projectName", project.getProjectName());
+            intent.putExtra("website", project.getWebsite());
+            intent.putExtra("client", project.getOpdrachtgever());
+            intent.putExtra("aantalUur", project.getAantalUur());
+            intent.putExtra("desc", project.getDesc());
+            intent.putExtra("photo", project.getPhoto());
             intent.putExtra("position", position);
-            intent.putExtra("projectUserId", projectUserId);
+            intent.putExtra("projectUserId", project.getUser().getId());
             v.getContext().startActivity(intent);
         });
 
@@ -121,7 +126,17 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
                 switch (item.getItemId()) {
                     case R.id.item_edit: {
-//                            return true;
+                        Intent intent = new Intent(context, EditProjectActivity.class);
+                        intent.putExtra("id", project.getId());
+                        intent.putExtra("projectName", project.getProjectName());
+                        intent.putExtra("website", project.getWebsite());
+                        intent.putExtra("client", project.getOpdrachtgever());
+                        intent.putExtra("aantalUur", project.getAantalUur());
+                        intent.putExtra("desc", project.getDesc());
+                        intent.putExtra("photo", project.getPhoto());
+                        intent.putExtra("position", position);
+                        context.startActivity(intent);
+                        return true;
                     }
                     case R.id.item_delete: {
                         deleteProject(project.getId(),position);
