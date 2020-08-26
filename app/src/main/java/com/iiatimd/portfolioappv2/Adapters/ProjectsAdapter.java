@@ -151,7 +151,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
     // Verwijder een project
     private void deleteProject(int projectId, int position) {
-//        Log.w(TAG, "onClick: Je wil verwijderen!");
+        Log.w(TAG, "onClick: Je wil verwijderen! " + projectId + " " + position);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Weet je het zeker?");
         builder.setMessage("Wanneer je bevestigd is er geen weg meer terug en wordt je project verwijderd.");
