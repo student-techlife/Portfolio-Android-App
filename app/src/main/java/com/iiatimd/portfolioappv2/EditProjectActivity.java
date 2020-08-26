@@ -141,7 +141,7 @@ public class EditProjectActivity extends AppCompatActivity {
                 project.setWebsite(website);
                 project.setOpdrachtgever(client);
                 // TODO opleverdatum
-                project.setPhoto(photo);
+                project.setPhoto(response.body().getData().getPhoto());
                 project.setDesc(desc);
 
                 HomeFragment.arrayList.set(position,project);
