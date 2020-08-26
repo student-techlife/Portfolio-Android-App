@@ -16,6 +16,7 @@
         <activity android:name=".ProjectShowActivity"></activity>
         <activity android:name=".AddProjectActivity" />
         <activity android:name=".UserInfoActivity" />
+        <activity android:name=".EditUserActivity" />
         <activity android:name=".OnBoardActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
