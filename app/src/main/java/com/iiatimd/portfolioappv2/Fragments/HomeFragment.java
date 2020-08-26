@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
         refreshLayout.setRefreshing(true);
 
         // Maak een API request call
-        callProject = service.projects();
+        callProject = service.myProjects();
         callProject.enqueue(new Callback<ProjectCall>() {
             @Override
             public void onResponse(Call<ProjectCall> call, Response<ProjectCall> response) {
@@ -102,12 +102,14 @@ public class HomeFragment extends Fragment {
 
                 for (int i = 0; i < response.body().getProjects().toArray().length; i++) {
 
+                    // Maak user object
                     User user = new User();
                     user.setId(response.body().getProjects().get(i).getUser().getId());
                     user.setName(response.body().getProjects().get(i).getUser().getName());
                     user.setLastname(response.body().getProjects().get(i).getUser().getLastname());
                     user.setPhoto(response.body().getProjects().get(i).getUser().getPhoto());
 
+                    // Maak project object per iteratie
                     Project project = new Project();
                     project.setUser(user);
                     project.setId(response.body().getProjects().get(i).getId());
