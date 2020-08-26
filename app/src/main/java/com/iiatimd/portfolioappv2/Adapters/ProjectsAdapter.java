@@ -29,10 +29,8 @@ import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.iiatimd.portfolioappv2.ProjectShowActivity;
 import com.iiatimd.portfolioappv2.R;
-import com.iiatimd.portfolioappv2.TokenManager;
 import com.squareup.picasso.Picasso;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -65,7 +63,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public ProjectsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_project,parent,false);
 
-        if (isInternetAvailable() == true) {
+        if (isOnline() != false) {
             service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
         }
 
@@ -73,13 +71,15 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     }
 
     // Check of device is verbonden met internet
-    private boolean isInternetAvailable() {
+    public static Boolean isOnline() {
         try {
-            InetAddress ipAddr = InetAddress.getByName("google.com");
-            return true;
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 8.8.8.8");
+            int returnVal = p1.waitFor();
+            return (returnVal == 0);
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
 
     @Override
