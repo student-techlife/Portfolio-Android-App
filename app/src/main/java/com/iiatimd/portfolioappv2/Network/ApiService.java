@@ -47,6 +47,11 @@ public interface ApiService {
     @FormUrlEncoded
     Call<ProjectResponse> delete_project(@Field("id") int id);
 
+    @POST("projects/update")
+    @FormUrlEncoded
+    Call<ProjectResponse> edit_project(@Field("id") int id, @Field("name") String name, @Field("website") String website, @Field("client") String client,
+                                       @Field("photo") String photo, @Field("oldPhoto") String oldPhoto, @Field("hours") String hours, @Field("desc") String desc);
+
     @POST("projects/create")
     @FormUrlEncoded
     Call<ProjectResponse> save_project(@Field("name") String name, @Field("website") String website, @Field("client") String client,
