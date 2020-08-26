@@ -70,9 +70,6 @@ public class EditProjectActivity extends AppCompatActivity {
         position        = intent.getIntExtra("position", 0);
         photo           = intent.getStringExtra("photo");
 
-        dateEditProjOplevering  = findViewById(R.id.dateEditProjOplevering);
-
-
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
