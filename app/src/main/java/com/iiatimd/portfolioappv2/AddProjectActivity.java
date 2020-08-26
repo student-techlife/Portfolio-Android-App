@@ -1,27 +1,24 @@
 package com.iiatimd.portfolioappv2;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
@@ -30,16 +27,11 @@ import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
 import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -77,6 +69,7 @@ public class AddProjectActivity extends AppCompatActivity {
         init();
     }
 
+    @SuppressLint("SetTextI18n")
     private void init() {
 
         Button btnProjectSave = findViewById(R.id.btnAddProject);
@@ -134,17 +127,17 @@ public class AddProjectActivity extends AppCompatActivity {
         String name         = txtProjectName.getText().toString();
         String website      = txtWebsite.getText().toString();
         String client       = txtOpdrachtgever.getText().toString();
-//        String completion_date = dateProjOplevering.getText().toString();
+        String completion_date = dateProjOplevering.getText().toString();
         String hours        = txtNumAantalUur.getText().toString();
         String photo        = convertToString(bitmap);
         String description  = txtDescProject.getText().toString();
 
-        call = protectedService.save_project(name,website,client,photo,hours,description);
+        call = protectedService.save_project(name,website,client,completion_date,photo,hours,description);
         call.enqueue(new Callback<ProjectResponse>() {
             @Override
-            public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
+            public void onResponse(@NotNull Call<ProjectResponse> call, @NotNull Response<ProjectResponse> response) {
                 Log.w(TAG, "onResponse: " + response );
-
+                assert response.body() != null;
 //                Log.w(TAG, "onResponse: " + response.body().getData().getWebsite() );
                 // Maak user object aan
                 User user = new User();
@@ -162,6 +155,7 @@ public class AddProjectActivity extends AppCompatActivity {
                 project.setOpdrachtgever(response.body().getData().getOpdrachtgever());
                 project.setAantalUur(response.body().getData().getAantalUur());
                 project.setDesc(response.body().getData().getDesc());
+                project.setDatumOplevering(response.body().getData().getDatumOplerving());
 
 //                Log.w(TAG, "onResponse: " + project.getWebsite());
 
@@ -175,7 +169,7 @@ public class AddProjectActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ProjectResponse> call, Throwable t) {
+            public void onFailure(@NotNull Call<ProjectResponse> call, @NotNull Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });

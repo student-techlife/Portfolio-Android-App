@@ -3,6 +3,8 @@ package com.iiatimd.portfolioappv2;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iiatimd.portfolioappv2.Entities.Project;
@@ -23,8 +26,11 @@ import com.iiatimd.portfolioappv2.Network.ApiService;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -38,15 +44,18 @@ public class EditProjectActivity extends AppCompatActivity {
     private ImageView imgProject;
     private int id,aantalUur,position;
     private String photo;
+    private TextView dateEditProjOplevering;
     private Boolean backToDefault = false;
     private Bitmap bitmap = null;
-    private Button saveButton,photoSelect,photoRemove;
+    private Button saveButton,photoSelect,photoRemove,dateTextButton;
     private static final int GALLERY_SELECT_PROJECT = 2;
     private EditText txtProjectName,txtWebsite,txtClient,txtAantalUur,txtDesc;
 
     ApiService service;
     TokenManager tokenManager;
     Call<ProjectResponse> editProject;
+    Calendar calendar;
+    DatePickerDialog datePickerDialog;
 
     private static final String TAG = "EditProjectActivity";
 
@@ -68,6 +77,7 @@ public class EditProjectActivity extends AppCompatActivity {
         init();
     }
 
+    @SuppressLint("SetTextI18n")
     private void init() {
         txtProjectName  = findViewById(R.id.txtEditProjectNaam);
         txtWebsite      = findViewById(R.id.txtEditWebsite);
@@ -86,6 +96,23 @@ public class EditProjectActivity extends AppCompatActivity {
         txtAantalUur.setText(String.valueOf(aantalUur));
         txtDesc.setText(getIntent().getStringExtra("desc"));
 
+        // Date
+        dateEditProjOplevering  = findViewById(R.id.dateEditProjOplevering);
+        dateTextButton      = findViewById(R.id.selectProjectDate);
+
+        // Datum picker (erg fancy)
+        dateTextButton.setOnClickListener(v->{
+            calendar = Calendar.getInstance();
+
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+
+            datePickerDialog = new DatePickerDialog(EditProjectActivity.this, (view1, year1, month1, dayOfMonth) -> dateEditProjOplevering.setText(dayOfMonth + "-" + (month1 +1) + "-" + year1), day, month, year);
+            datePickerDialog.updateDate(year,month,day);
+            datePickerDialog.show();
+        });
+
         // Load project image
         Picasso.get().load(RetrofitBuilder.URL + "projects/" + photo).into(imgProject);
 
@@ -94,13 +121,9 @@ public class EditProjectActivity extends AppCompatActivity {
             saveProject();
         });
 
-        photoSelect.setOnClickListener(v->{
-            selectPhoto();
-        });
+        photoSelect.setOnClickListener(v-> selectPhoto());
 
-        photoRemove.setOnClickListener(v->{
-            removePhoto();
-        });
+        photoRemove.setOnClickListener(v-> removePhoto());
     }
 
     public void cancelEdit(View view) {
@@ -123,24 +146,24 @@ public class EditProjectActivity extends AppCompatActivity {
         String name     = txtProjectName.getText().toString();
         String website  = txtWebsite.getText().toString();
         String client   = txtClient.getText().toString();
-        // TODO opleverdatum
+        String completion_date = dateEditProjOplevering.getText().toString();
         String hours    = txtAantalUur.getText().toString();
         String photo    = convertToString(bitmap);
         String desc     = txtDesc.getText().toString();
 
-        editProject = service.edit_project(id,name,website,client,photo,hours,desc);
+        editProject = service.edit_project(id,name,website,client,completion_date,photo,hours,desc);
         editProject.enqueue(new Callback<ProjectResponse>() {
             @Override
-            public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
+            public void onResponse(@NotNull Call<ProjectResponse> call, @NotNull Response<ProjectResponse> response) {
                 Log.w(TAG, "onResponse: " + response.body() );
-
+                assert response.body() != null;
                 Project project = HomeFragment.arrayList.get(position);
 
                 // Waardes aanpassen in project
                 project.setProjectName(name);
                 project.setWebsite(website);
                 project.setOpdrachtgever(client);
-                // TODO opleverdatum
+                project.setDatumOplevering(response.body().getData().getDatumOplerving());
                 project.setPhoto(response.body().getData().getPhoto());
                 project.setDesc(desc);
 
@@ -153,19 +176,19 @@ public class EditProjectActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ProjectResponse> call, Throwable t) {
+            public void onFailure(@NotNull Call<ProjectResponse> call, @NotNull Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
     }
 
     private String convertToString(Bitmap bitmap) {
-        if (bitmap != null && backToDefault == false) {
+        if (bitmap != null && !backToDefault) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG,25, byteArrayOutputStream);
             byte[] imgByte = byteArrayOutputStream.toByteArray();
             return Base64.encodeToString(imgByte,Base64.DEFAULT);
-        } if (backToDefault == true) {
+        } if (backToDefault) {
             return "default";
         }
         return "empty";
