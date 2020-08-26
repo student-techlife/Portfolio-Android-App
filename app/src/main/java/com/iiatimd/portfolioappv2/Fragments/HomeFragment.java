@@ -178,4 +178,21 @@ public class HomeFragment extends Fragment {
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    // NOTE Wordt enkel gebruikt als hidden state veranderd of de fragment
+    public void onHiddenChanged(boolean hidden) {
+
+        if (!hidden){
+            getProjects();
+        }
+
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getProjects();
+    }
 }
