@@ -66,6 +66,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
         if (isInternetAvailable()) {
             service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
+        } else {
+            service = RetrofitBuilder.createService(ApiService.class);
         }
 
         return new ProjectsHolder(view);
