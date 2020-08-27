@@ -2,10 +2,12 @@ package com.iiatimd.portfolioappv2;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.iiatimd.portfolioappv2.Entities.ProjectCall;
 import com.iiatimd.portfolioappv2.Fragments.AccountFragment;
 import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
 import com.iiatimd.portfolioappv2.Network.ApiService;
+import com.iiatimd.portfolioappv2.Network.InternetCheck;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 
 import retrofit2.Call;
@@ -40,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     TokenManager tokenManager;
     UserManager userManager;
     Call<ProjectCall> callProject;
+    InternetCheck internetCheck;
     Call<AccessToken> callLogout;
 
     @Override
@@ -65,22 +69,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public TokenManager getToken() {
-        TokenManager token = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
-        return token;
+        return TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
     }
 
     private void init() {
         navigationView = findViewById(R.id.bottom_nav);
+        internetCheck = new InternetCheck(getApplicationContext());
         fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(v->{
-//            Intent intent = new Intent(Intent.ACTION_PICK);
-//            intent.setType("image/*");
-//            startActivityForResult(intent, GALLERY_ADD_PROJECT);
-            startActivity(new Intent(HomeActivity.this, AddProjectActivity.class));
+            if (internetCheck.isInternetAvailable()) {
+                startActivity(new Intent(HomeActivity.this, AddProjectActivity.class));
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setTitle("Netwerkfout");
+                builder.setMessage("Projecten kunnen niet toegevoegd worden als er geen verbinding met het internet is.");
+                builder.setPositiveButton("OK", (dialog, i) -> {});
+                builder.show();
+            }
 
-            // TODO Misschien dit toch weglaten?
-//            setContentView(R.layout.activity_add_project);
         });
 
 //        userPref = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
