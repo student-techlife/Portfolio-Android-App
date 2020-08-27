@@ -18,6 +18,7 @@ import com.iiatimd.portfolioappv2.Adapters.ProjectsAdapter;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
 import com.iiatimd.portfolioappv2.Fragments.HomeFragment;
 import com.iiatimd.portfolioappv2.Network.ApiService;
+import com.iiatimd.portfolioappv2.Network.InternetCheck;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +39,7 @@ public class ProjectShowActivity extends AppCompatActivity {
 
     ApiService service;
     TokenManager tokenManager;
+    InternetCheck internetCheck;
     Call<ProjectResponse> deleteProject;
 
     private static final String TAG = "ProjectShowActivity";
@@ -47,6 +49,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_show);
         Intent intent=getIntent();
+
         id              = intent.getIntExtra("id", 0);
         photo           = intent.getStringExtra("photo");
         aantalUur       = intent.getIntExtra("aantalUur", 0);
@@ -77,8 +80,6 @@ public class ProjectShowActivity extends AppCompatActivity {
     }
 
     private void init() {
-//        Log.w(TAG, "onCreate: je hebt gekozen voor project: " + id + " " + aantalUur);
-
         // Load project image
         Picasso.get().load(RetrofitBuilder.URL + "projects/" + photo).into(projectImage);
         txtProjectName.setText(projectName);
@@ -87,6 +88,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         txtWebsite.setText(website);
         txtClient.setText(client);
         txtDesc.setText(desc);
+        internetCheck = new InternetCheck(getApplicationContext());
 
         // Pas zichtbaarheid aan van de knoppen, zodat alleen de eigenaar dingen kan aanpassen
         // Project user ID == account ID
@@ -99,57 +101,72 @@ public class ProjectShowActivity extends AppCompatActivity {
         }
 
         // Wanneer je product wilt gaan aanpassen
-        changeProject.setOnClickListener(v->{
-            Intent intent = new Intent(getApplicationContext(), EditProjectActivity.class);
-            intent.putExtra("id", id);
-            intent.putExtra("projectName", projectName);
-            intent.putExtra("website", website);
-            intent.putExtra("client", client);
-            intent.putExtra("aantalUur", aantalUur);
-            intent.putExtra("opleverDatum", opleverDatum);
-            intent.putExtra("desc", desc);
-            intent.putExtra("photo", photo);
-            intent.putExtra("position", position);
-            startActivity(intent);
+        changeProject.setOnClickListener(v -> {
+            if (internetCheck.isInternetAvailable()) {
+                Intent intent = new Intent(getApplicationContext(), EditProjectActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("projectName", projectName);
+                intent.putExtra("website", website);
+                intent.putExtra("client", client);
+                intent.putExtra("aantalUur", aantalUur);
+                intent.putExtra("opleverDatum", opleverDatum);
+                intent.putExtra("desc", desc);
+                intent.putExtra("photo", photo);
+                intent.putExtra("position", position);
+                startActivity(intent);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
+                builder.setTitle("Netwerkfout");
+                builder.setMessage("Projecten kunnen niet aangepast worden als er geen verbinding met het internet is.");
+                builder.setPositiveButton("OK", (dialog, i) -> {});
+                builder.show();
+            }
         });
 
         // Verwijder het project
         removeProject.setOnClickListener(v->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
-            builder.setTitle("Weet je het zeker?");
-            builder.setMessage("Wanneer je bevestigd is er geen weg meer terug en wordt je project verwijderd.");
-            builder.setPositiveButton("Verwijder", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
-//                    Log.w(TAG, "onClick: Je wil verwijderen!");
+            if (internetCheck.isInternetAvailable()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
+                builder.setTitle("Weet je het zeker?");
+                builder.setMessage("Wanneer je bevestigd is er geen weg meer terug en wordt je project verwijderd.");
+                builder.setPositiveButton("Verwijder", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
 
-                    // Maak een delete call naar backend API
-                    deleteProject = service.delete_project(id);
-                    deleteProject.enqueue(new Callback<ProjectResponse>() {
-                        @Override
-                        public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
-                            // Verwijder project van arraylisy
-                            HomeFragment.arrayList.remove(position);
-                            Objects.requireNonNull(HomeFragment.recyclerViewHome.getAdapter()).notifyItemRemoved(position);
-                            HomeFragment.recyclerViewHome.getAdapter().notifyDataSetChanged();
-                            // Sluit activity af
-                            finish();
-                        }
+                        // Maak een delete call naar backend API
+                        deleteProject = service.delete_project(id);
+                        deleteProject.enqueue(new Callback<ProjectResponse>() {
+                            @Override
+                            public void onResponse(Call<ProjectResponse> call, Response<ProjectResponse> response) {
+                                // Verwijder project van arraylisy
+                                HomeFragment.arrayList.remove(position);
+                                Objects.requireNonNull(HomeFragment.recyclerViewHome.getAdapter()).notifyItemRemoved(position);
+                                HomeFragment.recyclerViewHome.getAdapter().notifyDataSetChanged();
+                                // Sluit activity af
+                                finish();
+                            }
 
-                        @Override
-                        public void onFailure(Call<ProjectResponse> call, Throwable t) {
-                            Log.w(TAG, "onFailure: " + t.getMessage() );
-                        }
-                    });
-                }
-            });
-            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                            @Override
+                            public void onFailure(Call<ProjectResponse> call, Throwable t) {
+                                Log.w(TAG, "onFailure: " + t.getMessage() );
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                }
-            });
-            builder.show();
+                    }
+                });
+                builder.show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProjectShowActivity.this);
+                builder.setTitle("Netwerkfout");
+                builder.setMessage("Projecten kunnen niet verwijderd worden als er geen verbinding met het internet is.");
+                builder.setPositiveButton("OK", (dialog, i) -> {});
+                builder.show();
+            }
         });
     }
 

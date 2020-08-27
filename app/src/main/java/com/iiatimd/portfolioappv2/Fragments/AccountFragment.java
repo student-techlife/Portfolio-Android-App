@@ -32,7 +32,9 @@ import com.iiatimd.portfolioappv2.Entities.User;
 import com.iiatimd.portfolioappv2.HomeActivity;
 import com.iiatimd.portfolioappv2.LoginActivity;
 import com.iiatimd.portfolioappv2.Network.ApiService;
+import com.iiatimd.portfolioappv2.Network.InternetCheck;
 import com.iiatimd.portfolioappv2.Network.RetrofitBuilder;
+import com.iiatimd.portfolioappv2.ProjectShowActivity;
 import com.iiatimd.portfolioappv2.R;
 import com.iiatimd.portfolioappv2.UserInfoActivity;
 import com.iiatimd.portfolioappv2.UserManager;
@@ -59,6 +61,7 @@ public class AccountFragment extends Fragment {
     private TextView txtName,txtProjectsCount,txtProject;
     private RecyclerView recyclerViewAccount;
     private ArrayList<Project> arrayList;
+    private Context context;
     private SharedPreferences preferences;
 //    private AccountPostAdapter adapter;
     private String imgUrl = "";
@@ -66,6 +69,8 @@ public class AccountFragment extends Fragment {
     ApiService service;
     UserManager userManager;
     Call<ProjectCall> callProject;
+    InternetCheck internetCheck;
+
 
     private static final String TAG = "AccountFragment";
 
@@ -76,7 +81,6 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         assert inflater != null;
         view = inflater.inflate(R.layout.layout_account, container, false);
-
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity) Objects.requireNonNull(getContext())).getToken());
         init();
         return view;
@@ -92,11 +96,21 @@ public class AccountFragment extends Fragment {
         txtProjectsCount = view.findViewById(R.id.txtAccountProjectCount);
         txtProject = view.findViewById(R.id.txtProjecten);
         recyclerViewAccount = view.findViewById(R.id.recyclerAccount);
+
+        internetCheck = new InternetCheck(getContext());
         Button btnEditAccount = view.findViewById(R.id.btnEditAccount);
         btnEditAccount.setOnClickListener(v->{
-            Intent i = new Intent(getContext(), EditUserActivity.class);
-            i.putExtra("imgUrl",imgUrl);
-            startActivity(i);
+            if (internetCheck.isInternetAvailable()) {
+                Intent i = new Intent(getContext(), EditUserActivity.class);
+                i.putExtra("imgUrl",imgUrl);
+                startActivity(i);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Netwerkfout");
+                builder.setMessage("Profiel kan niet aangepast worden als er geen internetverbinding is.");
+                builder.setPositiveButton("OK", (dialog, i) -> {});
+                builder.show();
+            }
         });
         recyclerViewAccount.setHasFixedSize(true);
         recyclerViewAccount.setLayoutManager(new GridLayoutManager(getContext(),2));
