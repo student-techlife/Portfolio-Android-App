@@ -2,11 +2,9 @@ package com.iiatimd.portfolioappv2;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,7 +14,6 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -56,7 +53,7 @@ public class EditUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_edit_profile);
+        setContentView(R.layout.activity_edit_profile);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         userManager = UserManager.getInstance(getSharedPreferences("user", MODE_PRIVATE));
         protectedService = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
