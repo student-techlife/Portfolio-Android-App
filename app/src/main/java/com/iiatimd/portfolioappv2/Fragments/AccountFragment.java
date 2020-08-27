@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.iiatimd.portfolioappv2.EditProfilePasswordActivity;
 import com.iiatimd.portfolioappv2.EditUserActivity;
 import com.iiatimd.portfolioappv2.Entities.AccessToken;
 import com.iiatimd.portfolioappv2.Entities.Project;
@@ -61,6 +62,7 @@ public class AccountFragment extends Fragment {
     private TextView txtName,txtProjectsCount,txtProject,txtEmail;
     private ArrayList<Project> arrayList;
     private Context context;
+    private Button btnEditAccount, btnEditPassword;
     private SharedPreferences preferences;
     private String imgUrl = "";
 
@@ -97,7 +99,21 @@ public class AccountFragment extends Fragment {
         txtEmail = view.findViewById(R.id.txtAccountEmail);
 
         internetCheck = new InternetCheck(getContext());
-        Button btnEditAccount = view.findViewById(R.id.btnEditAccount);
+        btnEditAccount = view.findViewById(R.id.btnEditAccount);
+        btnEditPassword = view.findViewById(R.id.btnEditPassword);
+
+        btnEditPassword.setOnClickListener(v->{
+            if (internetCheck.isInternetAvailable()) {
+                Intent intent = new Intent(getContext(), EditProfilePasswordActivity.class);
+                startActivity(intent);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Netwerkfout");
+                builder.setMessage("Wachtwoord kan niet aangepast worden als er geen internetverbinding is.");
+                builder.setPositiveButton("OK", (dialog, i) -> {});
+                builder.show();
+            }
+        });
 
         // Bewerk account
         btnEditAccount.setOnClickListener(v->{

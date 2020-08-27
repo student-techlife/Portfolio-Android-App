@@ -47,6 +47,10 @@ public interface ApiService {
     @FormUrlEncoded
     Call<ProjectResponse> delete_project(@Field("id") int id);
 
+    @POST("change_password")
+    @FormUrlEncoded
+    Call<AccessToken> change_password(@Field("old_password") String old_password, @Field("password") String password, @Field("password_confirmation") String password_confirmation);
+
     @POST("projects/update")
     @FormUrlEncoded
     Call<ProjectResponse> edit_project(@Field("id") int id, @Field("name") String name, @Field("website") String website, @Field("client") String client, @Field("completion_date") String completion_date,
