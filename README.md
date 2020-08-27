@@ -13,7 +13,8 @@ Trots op je eigen projecten? Sla ze op in de app en heb altijd jouw portfolio bi
     5. Naam van de opdrachtgever (indien van toepassing)
 - Kan je een project niet vinden? Dan is er nog altijd de zoekfunctie
 - Pas je project of gebruikersaccount aan
-- Ook als je geen internet hebt kan je je projecten bekijken (maar niet alle functies zijn dan beschikbaar)
+- Help ik weet me wachtwoord niet meer! Volg dan de link voor een wachtwoord reset of als je niet te vreden bent over je bestaande wachtwoord, pas deze dan aan in de app zelf.
+- Ook als je geen internet hebt kan je je projecten bekijken! (echter functies zoals aanpassen en verwijderen, zijn dan tijdelijk uitgeschakeld)
 
 <p align="center">
     <a href="https://github.com/klaasnicolaas/Portfolio-Android-App">
