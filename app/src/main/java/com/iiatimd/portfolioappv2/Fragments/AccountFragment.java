@@ -58,8 +58,7 @@ public class AccountFragment extends Fragment {
 
     private View view;
     private CircleImageView imgProfile;
-    private TextView txtName,txtProjectsCount,txtProject;
-    private RecyclerView recyclerViewAccount;
+    private TextView txtName,txtProjectsCount,txtProject,txtEmail;
     private ArrayList<Project> arrayList;
     private Context context;
     private SharedPreferences preferences;
@@ -122,6 +121,8 @@ public class AccountFragment extends Fragment {
 
         // Set naam account
         txtName.setText(preferences.getString("name",null) +" "+ preferences.getString("lastname", null));
+        // Set Emailadres
+        txtEmail.setText(preferences.getString("email", null));
         // Set profiel foto
         Picasso.get().load(RetrofitBuilder.URL + "profiles/" + preferences.getString("photo", "")).into(imgProfile);
 
