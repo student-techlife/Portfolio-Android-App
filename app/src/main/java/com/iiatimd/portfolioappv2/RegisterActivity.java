@@ -167,17 +167,17 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validate (){
         if (txtEmail.getText().toString().isEmpty()){
             layoutEmail.setErrorEnabled(true);
-            layoutEmail.setError("Email is Required");
+            layoutEmail.setError("Email is verplicht");
             return false;
         }
         if (txtPassword.getText().toString().length()<8){
             layoutPassword.setErrorEnabled(true);
-            layoutPassword.setError("Required at least 8 characters");
+            layoutPassword.setError("Wachtwoord vereist minimaal 8 tekens");
             return false;
         }
         if (!txtConfirm.getText().toString().equals(txtPassword.getText().toString())){
             layoutConfirm.setErrorEnabled(true);
-            layoutConfirm.setError("Password does not match");
+            layoutConfirm.setError("Wachtwoord komt niet overeen");
             return false;
         }
 
