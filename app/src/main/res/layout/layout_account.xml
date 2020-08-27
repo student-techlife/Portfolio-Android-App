@@ -112,5 +112,17 @@
         android:textAllCaps="false"
         android:textColor="@color/colorWhite" />
 
+    <Button
+        android:id="@+id/btnEditPassword"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_round"
+        android:text="Wachtwoord aanpassen"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite" />
+
 
 </LinearLayout>
