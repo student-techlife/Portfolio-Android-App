@@ -112,6 +112,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             intent.putExtra("website", project.getWebsite());
             intent.putExtra("client", project.getOpdrachtgever());
             intent.putExtra("aantalUur", project.getAantalUur());
+            intent.putExtra("opleverDatum", project.getDatumOplerving());
             intent.putExtra("desc", project.getDesc());
             intent.putExtra("photo", project.getPhoto());
             intent.putExtra("position", position);
@@ -132,6 +133,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                         intent.putExtra("website", project.getWebsite());
                         intent.putExtra("client", project.getOpdrachtgever());
                         intent.putExtra("aantalUur", project.getAantalUur());
+                        intent.putExtra("opleverDatum", project.getDatumOplerving());
                         intent.putExtra("desc", project.getDesc());
                         intent.putExtra("photo", project.getPhoto());
                         intent.putExtra("position", position);
