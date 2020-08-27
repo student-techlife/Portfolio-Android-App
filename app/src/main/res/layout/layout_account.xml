@@ -56,6 +56,15 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/txtAccountEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="Emailadres"
+                android:textSize="15sp" />
+
         </LinearLayout>
 
 
@@ -102,13 +111,6 @@
         android:text="@string/change_account"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/recyclerAccount"
-        android:layout_height="wrap_content"/>
-
 
 
 </LinearLayout>

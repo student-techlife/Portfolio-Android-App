@@ -58,16 +58,13 @@ public class AccountFragment extends Fragment {
 
     private View view;
     private CircleImageView imgProfile;
-    private TextView txtName,txtProjectsCount,txtProject;
-    private RecyclerView recyclerViewAccount;
+    private TextView txtName,txtProjectsCount,txtProject,txtEmail;
     private ArrayList<Project> arrayList;
     private Context context;
     private SharedPreferences preferences;
-//    private AccountPostAdapter adapter;
     private String imgUrl = "";
 
     ApiService service;
-    UserManager userManager;
     Call<ProjectCall> callProject;
     InternetCheck internetCheck;
 
@@ -91,14 +88,18 @@ public class AccountFragment extends Fragment {
         MaterialToolbar toolbar = view.findViewById(R.id.toolbarAccount);
         ((HomeActivity)getContext()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
+
+        // Bind to view items
         imgProfile = view.findViewById(R.id.imgAccountProfile);
         txtName = view.findViewById(R.id.txtAccountName);
         txtProjectsCount = view.findViewById(R.id.txtAccountProjectCount);
         txtProject = view.findViewById(R.id.txtProjecten);
-        recyclerViewAccount = view.findViewById(R.id.recyclerAccount);
+        txtEmail = view.findViewById(R.id.txtAccountEmail);
 
         internetCheck = new InternetCheck(getContext());
         Button btnEditAccount = view.findViewById(R.id.btnEditAccount);
+
+        // Bewerk account
         btnEditAccount.setOnClickListener(v->{
             if (internetCheck.isInternetAvailable()) {
                 Intent i = new Intent(getContext(), EditUserActivity.class);
@@ -112,8 +113,6 @@ public class AccountFragment extends Fragment {
                 builder.show();
             }
         });
-        recyclerViewAccount.setHasFixedSize(true);
-        recyclerViewAccount.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 
     @SuppressLint("SetTextI18n")
@@ -122,6 +121,8 @@ public class AccountFragment extends Fragment {
 
         // Set naam account
         txtName.setText(preferences.getString("name",null) +" "+ preferences.getString("lastname", null));
+        // Set Emailadres
+        txtEmail.setText(preferences.getString("email", null));
         // Set profiel foto
         Picasso.get().load(RetrofitBuilder.URL + "profiles/" + preferences.getString("photo", "")).into(imgProfile);
 
@@ -155,6 +156,7 @@ public class AccountFragment extends Fragment {
                     arrayList.add(project);
                 }
                 // Save data
+                // Set project counter
                 txtProjectsCount.setText(arrayList.size()+"");
             }
 
@@ -163,16 +165,8 @@ public class AccountFragment extends Fragment {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
-
-        // Set project counter
-//        txtProjectsCount.setText(HomeFragment.arrayList.size()+"");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        recyclerViewAccount.setAdapter(null);
-    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

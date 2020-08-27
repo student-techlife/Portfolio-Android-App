@@ -141,8 +141,12 @@ public class HomeActivity extends AppCompatActivity {
                     // Verwijder user en tokens uit memory
                     userManager.deleteUser();
                     tokenManager.deleteToken();
+
                     // Zet recyclerview op null, belangrijk anders ontstaat er een memory leak!
-                    HomeFragment.recyclerViewHome = null;
+                    if (HomeFragment.recyclerViewHome != null) {
+                        HomeFragment.recyclerViewHome = null;
+                    }
+
                     // Keer terug naar LoginActivity
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                     finish();
