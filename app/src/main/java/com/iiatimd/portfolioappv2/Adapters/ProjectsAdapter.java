@@ -203,8 +203,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                 filteredList.addAll(listAll);
             } else {
                 for (Project project : listAll){
-                    if(project.getDesc().toLowerCase().contains(constraint.toString().toLowerCase())
-                            || project.getUser().getName().toLowerCase().contains(constraint.toString().toLowerCase())){
+                    if(project.getProjectName().toLowerCase().contains(constraint.toString().toLowerCase())
+                            || project.getOpdrachtgever().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredList.add(project);
                     }
                 }
