@@ -20,6 +20,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.iiatimd.portfolioappv2.Network.InternetCheck;
+
 import com.iiatimd.portfolioappv2.EditProjectActivity;
 import com.iiatimd.portfolioappv2.Entities.Project;
 import com.iiatimd.portfolioappv2.Entities.ProjectResponse;
@@ -51,6 +53,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
     ApiService service;
     Call<ProjectResponse> deleteProject;
+    InternetCheck internetCheck;
 
     public ProjectsAdapter(Context context, ArrayList<Project> list) {
         this.context = context;
@@ -63,8 +66,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public ProjectsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_project,parent,false);
+        internetCheck = new InternetCheck(context.getApplicationContext());
 
-        if (isInternetAvailable()) {
+        if (internetCheck.isInternetAvailable()) {
             service = RetrofitBuilder.createServiceWithAuth(ApiService.class, ((HomeActivity)context).getToken());
         } else {
             service = RetrofitBuilder.createService(ApiService.class);
@@ -73,11 +77,6 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         return new ProjectsHolder(view);
     }
 
-    // Check of device is verbonden met internet
-    private boolean isInternetAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
-    }
 
     @Override
     public void onBindViewHolder(@NonNull ProjectsHolder holder, int position) {
