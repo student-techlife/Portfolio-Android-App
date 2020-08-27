@@ -98,7 +98,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 //        holder.txtDate.setText(project.getDate());
 //        holder.txtDesc.setText(project.getDesc());
 
-        if (project.getUser().getId()==preferences.getInt("id",0)) {
+        if (internetCheck.isInternetAvailable() && project.getUser().getId()==preferences.getInt("id",0)) {
             holder.btnProjectOption.setVisibility(View.VISIBLE);
         } else {
             holder.btnProjectOption.setVisibility(View.GONE);
@@ -122,37 +122,35 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             v.getContext().startActivity(intent);
         });
 
-        if (internetCheck.isInternetAvailable()) {
-            holder.btnProjectOption.setOnClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(context, holder.btnProjectOption);
-                popupMenu.inflate(R.menu.menu_project_options);
-                popupMenu.setOnMenuItemClickListener(item -> {
+        holder.btnProjectOption.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(context, holder.btnProjectOption);
+            popupMenu.inflate(R.menu.menu_project_options);
+            popupMenu.setOnMenuItemClickListener(item -> {
 
-                    switch (item.getItemId()) {
-                        case R.id.item_edit: {
-                            Intent intent = new Intent(context, EditProjectActivity.class);
-                            intent.putExtra("id", project.getId());
-                            intent.putExtra("projectName", project.getProjectName());
-                            intent.putExtra("website", project.getWebsite());
-                            intent.putExtra("client", project.getOpdrachtgever());
-                            intent.putExtra("aantalUur", project.getAantalUur());
-                            intent.putExtra("opleverDatum", project.getDatumOplerving());
-                            intent.putExtra("desc", project.getDesc());
-                            intent.putExtra("photo", project.getPhoto());
-                            intent.putExtra("position", position);
-                            context.startActivity(intent);
-                            return true;
-                        }
-                        case R.id.item_delete: {
-                            deleteProject(project.getId(), position);
-                            return true;
-                        }
+                switch (item.getItemId()) {
+                    case R.id.item_edit: {
+                        Intent intent = new Intent(context, EditProjectActivity.class);
+                        intent.putExtra("id", project.getId());
+                        intent.putExtra("projectName", project.getProjectName());
+                        intent.putExtra("website", project.getWebsite());
+                        intent.putExtra("client", project.getOpdrachtgever());
+                        intent.putExtra("aantalUur", project.getAantalUur());
+                        intent.putExtra("opleverDatum", project.getDatumOplerving());
+                        intent.putExtra("desc", project.getDesc());
+                        intent.putExtra("photo", project.getPhoto());
+                        intent.putExtra("position", position);
+                        context.startActivity(intent);
+                        return true;
                     }
-                    return false;
-                });
-                popupMenu.show();
+                    case R.id.item_delete: {
+                        deleteProject(project.getId(), position);
+                        return true;
+                    }
+                }
+                return false;
             });
-        }
+            popupMenu.show();
+        });
     }
 
     // Verwijder een project
