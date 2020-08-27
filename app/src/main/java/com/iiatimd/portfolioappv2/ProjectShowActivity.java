@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class ProjectShowActivity extends AppCompatActivity {
 
     private int id,aantalUur,position,projectUserId;
-    private String photo,projectName,website,client,desc;
+    private String photo,projectName,website,client,opleverDatum,desc;
     private TextView txtAantalUur,txtOplevering,txtProjectName,txtWebsite,txtClient,txtDesc;
     private Button removeProject,changeProject;
     private ImageView projectImage;
@@ -53,6 +53,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         projectName     = intent.getStringExtra("projectName");
         website         = intent.getStringExtra("website");
         client          = intent.getStringExtra("client");
+        opleverDatum    = intent.getStringExtra("opleverDatum");
         desc            = intent.getStringExtra("desc");
         position        = intent.getIntExtra("position", 0);
         projectUserId   = intent.getIntExtra("projectUserId", 0);
@@ -82,6 +83,7 @@ public class ProjectShowActivity extends AppCompatActivity {
         Picasso.get().load(RetrofitBuilder.URL + "projects/" + photo).into(projectImage);
         txtProjectName.setText(projectName);
         txtAantalUur.setText(String.valueOf(aantalUur));
+        txtOplevering.setText(opleverDatum);
         txtWebsite.setText(website);
         txtClient.setText(client);
         txtDesc.setText(desc);
@@ -104,6 +106,7 @@ public class ProjectShowActivity extends AppCompatActivity {
             intent.putExtra("website", website);
             intent.putExtra("client", client);
             intent.putExtra("aantalUur", aantalUur);
+            intent.putExtra("opleverDatum", opleverDatum);
             intent.putExtra("desc", desc);
             intent.putExtra("photo", photo);
             intent.putExtra("position", position);

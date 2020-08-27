@@ -89,16 +89,17 @@ public class EditProjectActivity extends AppCompatActivity {
         photoRemove     = findViewById(R.id.btnEditRemovePhoto);
         imgProject      = findViewById(R.id.imgEditProject);
 
+        // Date
+        dateEditProjOplevering  = findViewById(R.id.dateEditProjOplevering);
+        dateTextButton          = findViewById(R.id.selectProjectDate);
+
         // Get variables from Adapter
         txtProjectName.setText(getIntent().getStringExtra("projectName"));
         txtWebsite.setText(getIntent().getStringExtra("website"));
         txtClient.setText(getIntent().getStringExtra("client"));
+        dateEditProjOplevering.setText(getIntent().getStringExtra("opleverDatum"));
         txtAantalUur.setText(String.valueOf(aantalUur));
         txtDesc.setText(getIntent().getStringExtra("desc"));
-
-        // Date
-        dateEditProjOplevering  = findViewById(R.id.dateEditProjOplevering);
-        dateTextButton      = findViewById(R.id.selectProjectDate);
 
         // Datum picker (erg fancy)
         dateTextButton.setOnClickListener(v->{
@@ -143,13 +144,13 @@ public class EditProjectActivity extends AppCompatActivity {
     }
 
     private void saveProject() {
-        String name     = txtProjectName.getText().toString();
-        String website  = txtWebsite.getText().toString();
-        String client   = txtClient.getText().toString();
-        String completion_date = dateEditProjOplevering.getText().toString();
-        String hours    = txtAantalUur.getText().toString();
-        String photo    = convertToString(bitmap);
-        String desc     = txtDesc.getText().toString();
+        String name             = txtProjectName.getText().toString();
+        String website          = txtWebsite.getText().toString();
+        String client           = txtClient.getText().toString();
+        String completion_date  = dateEditProjOplevering.getText().toString();
+        String hours            = txtAantalUur.getText().toString();
+        String photo            = convertToString(bitmap);
+        String desc             = txtDesc.getText().toString();
 
         editProject = service.edit_project(id,name,website,client,completion_date,photo,hours,desc);
         editProject.enqueue(new Callback<ProjectResponse>() {
@@ -163,7 +164,7 @@ public class EditProjectActivity extends AppCompatActivity {
                 project.setProjectName(name);
                 project.setWebsite(website);
                 project.setOpdrachtgever(client);
-                project.setDatumOplevering(response.body().getData().getDatumOplerving());
+                project.setDatumOplevering(completion_date);
                 project.setPhoto(response.body().getData().getPhoto());
                 project.setDesc(desc);
 
