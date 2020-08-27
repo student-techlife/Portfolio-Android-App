@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditProfilePasswordActivity"></activity>
+        <activity
+            android:name=".EditProfilePasswordActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EditProjectActivity"
             android:screenOrientation="portrait" />
