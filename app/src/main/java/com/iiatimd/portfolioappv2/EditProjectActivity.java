@@ -41,7 +41,7 @@ import static java.security.AccessController.getContext;
 
 public class EditProjectActivity extends AppCompatActivity {
 
-    private ImageView imgProject;
+    private ImageView imgProject,goBack;
     private int id,aantalUur,position;
     private String photo;
     private TextView dateEditProjOplevering;
@@ -88,6 +88,7 @@ public class EditProjectActivity extends AppCompatActivity {
         photoSelect     = findViewById(R.id.btnEditSelectPhoto);
         photoRemove     = findViewById(R.id.btnEditRemovePhoto);
         imgProject      = findViewById(R.id.imgEditProject);
+        goBack          = findViewById(R.id.imgEditProjectGoBack);
 
         // Date
         dateEditProjOplevering  = findViewById(R.id.dateEditProjOplevering);
@@ -122,21 +123,23 @@ public class EditProjectActivity extends AppCompatActivity {
             saveProject();
         });
 
+        goBack.setOnClickListener(v->{
+            startActivity(new Intent(EditProjectActivity.this, HomeActivity.class));
+        });
+
         photoSelect.setOnClickListener(v-> selectPhoto());
 
         photoRemove.setOnClickListener(v-> removePhoto());
     }
 
-    public void cancelEdit(View view) {
-        super.onBackPressed();
-    }
-
+    // Selecteer een foto
     private void selectPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, GALLERY_SELECT_PROJECT);
     }
 
+    // Verwijder een foto
     private void removePhoto() {
         imgProject.setImageResource(0);
         backToDefault = true;

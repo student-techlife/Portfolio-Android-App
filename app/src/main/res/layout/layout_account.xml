@@ -35,17 +35,17 @@
         android:baselineAligned="false">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
+            android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgAccountProfile"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/imgAccountProfile"/>
+                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:id="@+id/txtAccountName"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
-                android:text="Emailadres"
+                android:text="@string/email"
                 android:textSize="15sp" />
 
         </LinearLayout>
@@ -109,6 +109,18 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/btn_round"
         android:text="@string/change_account"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite" />
+
+    <Button
+        android:id="@+id/btnEditPassword"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_round"
+        android:text="@string/btn_change_password"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite" />
 

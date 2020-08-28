@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout layoutEmail,layoutPassword;
     private TextInputEditText txtEmail,txtPassword;
-    private TextView txtSignUp;
+    private TextView txtSignUp,txtResetPassword;
     private Button btnSignIn;
 
     private static final String TAG = "SignInActivity";
@@ -71,12 +72,20 @@ public class LoginActivity extends AppCompatActivity {
         layoutEmail = findViewById(R.id.txtLayoutEmailSignIn);
         txtPassword = findViewById(R.id.txtPasswordSignIn);
         txtSignUp = findViewById(R.id.txtSignUp);
+        txtResetPassword = findViewById(R.id.txtResetPassword);
         txtEmail = findViewById(R.id.txtEmailSignIn);
         btnSignIn = findViewById(R.id.btnSignIn);
 
         // Geen account? Ga naar registratie scherm
         txtSignUp.setOnClickListener(v->{
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        });
+
+        // Wachtwoord vergeten? Vraag dan een reset aan
+        txtResetPassword.setOnClickListener(v->{
+            Uri uri = Uri.parse("http://64.225.75.222/password/reset");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
 
         // Valideer input en start login functie

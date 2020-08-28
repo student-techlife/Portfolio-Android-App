@@ -11,23 +11,33 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="locked"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:screenOrientation="locked">
-        <activity android:name=".EditProjectActivity"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".EditProfilePasswordActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ProjectShowActivity"
+        <activity
+            android:name=".EditProjectActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".AddProjectActivity"
+        <activity
+            android:name=".ProjectShowActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserInfoActivity"
+        <activity
+            android:name=".AddProjectActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".EditUserActivity"
+        <activity
+            android:name=".UserInfoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".OnBoardActivity"
+        <activity
+            android:name=".EditUserActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".OnBoardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,11 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".HomeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
     </application>
 
